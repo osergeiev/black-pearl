@@ -34,7 +34,7 @@ export function RewardsView({ profile, rewards }: { profile: Profile; rewards: R
 
   return (
     <div className="flex-1 min-h-0 overflow-y-auto flex flex-col">
-      <div className="bg-brand-red px-[18px] py-5 text-white flex-shrink-0 relative">
+      <div className="bg-brand-coral px-[18px] py-5 text-white flex-shrink-0 relative">
         <button onClick={logout} className="absolute top-[18px] right-4 bg-white/20 text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1">
           <IconLogout size={12} />Logout
         </button>
@@ -50,8 +50,8 @@ export function RewardsView({ profile, rewards }: { profile: Profile; rewards: R
           return (
             <div key={r.title} className={`bg-white rounded-[13px] p-3.5 border-[1.5px] border-brand-beige ${locked ? 'opacity-55' : ''}`}>
               <div className="flex items-center gap-2.5 mb-2">
-                <div className="w-11 h-11 rounded-[11px] bg-[#fff3e0] flex items-center justify-center flex-shrink-0">
-                  <i className={`ti ${r.icon}`} style={{ fontSize: 24, color: '#8c3f2d' }} />
+                <div className="w-11 h-11 rounded-[11px] bg-brand-coral-bg flex items-center justify-center flex-shrink-0">
+                  <i className={`ti ${r.icon}`} style={{ fontSize: 24, color: '#FF6B6B' }} />
                 </div>
                 <div className="flex-1">
                   <div className="text-[10px] font-extrabold text-brand-muted uppercase tracking-wide">{r.biz}</div>
@@ -59,15 +59,15 @@ export function RewardsView({ profile, rewards }: { profile: Profile; rewards: R
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <div className="text-xs font-black text-brand-green flex items-center gap-0.5">
-                  <IconStarFilled size={12} className="text-[#d4a017]" />{r.cost} pts
+                <div className="text-xs font-black text-brand-amber flex items-center gap-0.5">
+                  <IconStarFilled size={12} className="text-brand-amber" />{r.cost} pts
                 </div>
                 {locked ? (
                   <button disabled className="bg-brand-beige-dark text-brand-muted text-[11px] font-extrabold px-3.5 py-1.5 rounded-full flex items-center gap-1">
                     <IconLock size={11} />{r.cost - pts} more
                   </button>
                 ) : (
-                  <button onClick={() => redeem(r)} disabled={redeeming === r.title} className="bg-brand-green text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full">
+                  <button onClick={() => redeem(r)} disabled={redeeming === r.title} className="bg-brand-coral text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full">
                     {redeeming === r.title ? 'Redeeming...' : 'Redeem'}
                   </button>
                 )}

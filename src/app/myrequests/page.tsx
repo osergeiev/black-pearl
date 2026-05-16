@@ -19,10 +19,10 @@ export default async function MyRequestsPage() {
   return (
     <>
       <div className="flex-1 min-h-0 overflow-y-auto flex flex-col">
-        <Header title="My requests" subtitle="All your quest submissions" icon={<IconHistory size={22} />} color="green" />
+        <Header title="My requests" subtitle="All your quest submissions" icon={<IconHistory size={22} />} color="blue" />
         {(!requests || requests.length === 0) ? (
           <div className="text-center py-10 px-5 text-brand-muted font-bold text-sm leading-relaxed">
-            <IconInbox size={40} className="text-[#c8e6c9] mx-auto mb-2.5" />
+            <IconInbox size={40} className="text-brand-blue mx-auto mb-2.5" />
             No requests yet.<br />Prove your first quest!
           </div>
         ) : (
@@ -32,7 +32,7 @@ export default async function MyRequestsPage() {
               return (
                 <div key={r.id} className="bg-white rounded-[13px] p-3 border-[1.5px] border-brand-beige">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-[10px] bg-[#e8f5e8] text-brand-green flex items-center justify-center flex-shrink-0">
+                    <div className="w-9 h-9 rounded-[10px] bg-[#EAF2FF] text-brand-blue flex items-center justify-center flex-shrink-0">
                       <i className={`ti ${r.quest?.icon || 'ti-paw'}`} style={{ fontSize: 18 }} />
                     </div>
                     <div className="flex-1">
@@ -55,7 +55,7 @@ export default async function MyRequestsPage() {
 }
 
 function StatusBadge({ status }: { status: 'approved' | 'pending' | 'rejected' }) {
-  if (status === 'approved') return <div className="bg-[#e8f5e8] text-brand-green text-[9px] font-extrabold px-2 py-0.5 rounded-md flex items-center gap-0.5"><IconCheck size={11} />Approved</div>;
+  if (status === 'approved') return <div className="bg-brand-teal-bg text-brand-teal text-[9px] font-extrabold px-2 py-0.5 rounded-md flex items-center gap-0.5"><IconCheck size={11} />Approved</div>;
   if (status === 'pending') return <div className="bg-[#fff3e0] text-[#a85e0c] text-[9px] font-extrabold px-2 py-0.5 rounded-md flex items-center gap-0.5"><IconClock size={11} />Pending</div>;
-  return <div className="bg-[#faebec] text-[#a83232] text-[9px] font-extrabold px-2 py-0.5 rounded-md flex items-center gap-0.5"><IconX size={11} />Rejected</div>;
+  return <div className="bg-brand-coral-bg text-brand-coral text-[9px] font-extrabold px-2 py-0.5 rounded-md flex items-center gap-0.5"><IconX size={11} />Rejected</div>;
 }

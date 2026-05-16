@@ -23,7 +23,7 @@ export default async function LeaderboardPage() {
           {(leaders || []).map((l: any, idx: number) => {
             const isMe = l.id === profile.id;
             const initials = l.name.split(' ').map((s: string) => s[0]).join('').substring(0, 2);
-            const rankColor = idx === 0 ? 'text-[#d4a017]' : idx === 1 ? 'text-[#9e9e9e]' : idx === 2 ? 'text-[#c17c3a]' : 'text-[#b0a898]';
+            const rankColor = idx === 0 ? 'text-brand-amber' : idx === 1 ? 'text-[#9e9e9e]' : idx === 2 ? 'text-[#C17C3A]' : 'text-[#b0a898]';
             return (
               <div
                 key={l.id}
@@ -34,7 +34,7 @@ export default async function LeaderboardPage() {
                 <div className={`text-[15px] font-black w-6 text-center ${isMe ? 'text-brand-green' : rankColor}`}>
                   {idx + 1}
                 </div>
-                <div className="w-9 h-9 rounded-full bg-[#e8f4ff] text-[#185FA5] flex items-center justify-center font-black text-xs flex-shrink-0">
+                <div className="w-9 h-9 rounded-full bg-[#EAF2FF] text-brand-blue flex items-center justify-center font-black text-xs flex-shrink-0">
                   {initials}
                 </div>
                 <div className="flex-1">

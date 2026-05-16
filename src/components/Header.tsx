@@ -4,13 +4,15 @@ import { IconLogout, IconX } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase-client';
 
-type Color = 'green' | 'blue' | 'red' | 'purple';
+type Color = 'green' | 'blue' | 'red' | 'purple' | 'teal' | 'coral';
 
 const bg: Record<Color, string> = {
   green: 'bg-brand-green',
   blue: 'bg-brand-blue',
   red: 'bg-brand-red',
-  purple: 'bg-brand-purple'
+  purple: 'bg-brand-purple',
+  teal: 'bg-brand-teal',
+  coral: 'bg-brand-coral'
 };
 
 export function Header({

@@ -54,7 +54,7 @@ export function ProofForm({ quest }: { quest: Quest }) {
   if (done) {
     return (
       <div className="flex-1 min-h-0 overflow-y-auto flex flex-col">
-        <div className="bg-brand-green px-[18px] py-5 text-white flex-shrink-0 relative">
+        <div className="bg-brand-teal px-[18px] py-5 text-white flex-shrink-0 relative">
           <button onClick={() => router.push('/home')} className="absolute top-[18px] right-4 bg-white/20 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1">
             <IconX size={12} />Close
           </button>
@@ -74,7 +74,7 @@ export function ProofForm({ quest }: { quest: Quest }) {
               <img src={preview} alt="submitted" className="w-full h-full object-cover" />
             </div>
           )}
-          <button onClick={() => { router.push('/home'); router.refresh(); }} className="w-full bg-brand-green text-white text-sm font-extrabold py-3 rounded-xl">
+          <button onClick={() => { router.push('/home'); router.refresh(); }} className="w-full bg-brand-teal text-white text-sm font-extrabold py-3 rounded-xl">
             Back to quests
           </button>
         </div>
@@ -97,10 +97,10 @@ export function ProofForm({ quest }: { quest: Quest }) {
         {!preview ? (
           <div
             onClick={() => inputRef.current?.click()}
-            className="border-2 border-dashed border-[#c8e6c9] rounded-[13px] py-6 px-3.5 text-center cursor-pointer bg-brand-green-bg mb-3"
+            className="border-2 border-dashed border-[#B8EDE8] rounded-[13px] py-6 px-3.5 text-center cursor-pointer bg-brand-teal-bg mb-3"
           >
-            <IconCamera size={38} className="text-brand-green mx-auto mb-1.5" />
-            <div className="text-[13px] font-extrabold text-brand-green">Take or upload a photo</div>
+            <IconCamera size={38} className="text-brand-teal mx-auto mb-1.5" />
+            <div className="text-[13px] font-extrabold text-brand-teal">Take or upload a photo</div>
             <div className="text-[10px] text-brand-muted font-semibold mt-0.5">
               Receipt, food, location — whatever proves it
             </div>
@@ -111,7 +111,7 @@ export function ProofForm({ quest }: { quest: Quest }) {
           </div>
         )}
 
-        {error && <div className="text-[#a83232] text-xs font-bold mb-2 text-center bg-[#faebec] p-2 rounded-lg">{error}</div>}
+        {error && <div className="text-brand-coral text-xs font-bold mb-2 text-center bg-brand-coral-bg p-2 rounded-lg">{error}</div>}
 
         <button
           onClick={submit}
