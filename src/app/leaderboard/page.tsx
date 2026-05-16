@@ -18,7 +18,7 @@ export default async function LeaderboardPage() {
   return (
     <>
       <div className="flex-1 min-h-0 overflow-y-auto flex flex-col">
-        <Header title="Leaderboard" subtitle="Top citizens by points earned" icon={<IconTrophy size={22} />} color="blue" />
+        <Header title="Leaderboard" subtitle="Top citizens by points earned" icon={<IconTrophy size={22} />} color="green" />
         <div className="p-3.5 flex flex-col gap-2">
           {(leaders || []).map((l: any, idx: number) => {
             const isMe = l.id === profile.id;
