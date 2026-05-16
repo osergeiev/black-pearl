@@ -6,7 +6,7 @@ import { IconGift, IconStarFilled, IconLock, IconLogout } from '@tabler/icons-re
 import { createClient } from '@/lib/supabase-client';
 import type { Profile } from '@/types';
 
-type Reward = { biz: string; title: string; icon: string; cost: number };
+type Reward = { biz: string; title: string; icon: string; image_url?: string; cost: number };
 
 export function RewardsView({ profile, rewards }: { profile: Profile; rewards: Reward[] }) {
   const router = useRouter();
@@ -49,14 +49,14 @@ export function RewardsView({ profile, rewards }: { profile: Profile; rewards: R
           const locked = pts < r.cost;
           return (
             <div key={r.title} className={`bg-white rounded-[13px] p-3.5 border-[1.5px] border-brand-beige ${locked ? 'opacity-55' : ''}`}>
-              <div className="flex items-center gap-2.5 mb-2">
-                <div className="w-11 h-11 rounded-[11px] bg-brand-coral-bg flex items-center justify-center flex-shrink-0">
-                  <i className={`ti ${r.icon}`} style={{ fontSize: 24, color: '#FF6B6B' }} />
+              {r.image_url && (
+                <div className="w-full h-28 rounded-[11px] overflow-hidden mb-2.5">
+                  <img src={r.image_url} alt={r.title} className="w-full h-full object-cover" />
                 </div>
-                <div className="flex-1">
-                  <div className="text-[10px] font-extrabold text-brand-muted uppercase tracking-wide">{r.biz}</div>
-                  <div className="text-[13px] font-extrabold text-[#1a1a1a]">{r.title}</div>
-                </div>
+              )}
+              <div className="mb-2">
+                <div className="text-[10px] font-extrabold text-brand-muted uppercase tracking-wide">{r.biz}</div>
+                <div className="text-[13px] font-extrabold text-[#1a1a1a]">{r.title}</div>
               </div>
               <div className="flex items-center justify-between">
                 <div className="text-xs font-black text-brand-amber flex items-center gap-0.5">

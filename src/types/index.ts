@@ -3,6 +3,7 @@ export type Profile = {
   name: string;
   neighborhood: string | null;
   points: number;
+  total_earned: number;
   streak: number;
   last_submission_date: string | null;
   role: 'user' | 'admin';

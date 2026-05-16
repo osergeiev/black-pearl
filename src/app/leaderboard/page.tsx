@@ -11,8 +11,8 @@ export default async function LeaderboardPage() {
   const supabase = await createClient();
   const { data: leaders } = await supabase
     .from('profiles')
-    .select('id, name, points, neighborhood')
-    .order('points', { ascending: false })
+    .select('id, name, total_earned, neighborhood')
+    .order('total_earned', { ascending: false })
     .limit(20);
 
   return (
@@ -43,7 +43,7 @@ export default async function LeaderboardPage() {
                   </div>
                   <div className="text-[10px] text-brand-muted font-bold">{l.neighborhood || 'Manuš'}</div>
                 </div>
-                <div className="text-sm font-black text-brand-green">{l.points}</div>
+                <div className="text-sm font-black text-brand-green">{l.total_earned}</div>
               </div>
             );
           })}

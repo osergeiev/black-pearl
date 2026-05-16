@@ -16,6 +16,7 @@ create table profiles (
   name text not null,
   neighborhood text default 'Manuš',
   points int default 0,
+  total_earned int default 0,
   streak int default 0,
   last_submission_date date,
   role text default 'user' check (role in ('user', 'admin')),
@@ -127,7 +128,10 @@ begin
     set status = 'approved', reviewed_at = now(), reviewed_by = auth.uid()
     where id = req_id;
 
-  update profiles set points = points + v_pts where id = v_user;
+  update profiles set
+    points = points + v_pts,
+    total_earned = total_earned + v_pts
+  where id = v_user;
 end;
 $$ language plpgsql security definer;
 
