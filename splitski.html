@@ -194,7 +194,7 @@ input[type=file]{display:none}
 <div class="phone-wrap">
 <div class="toast" id="toast"></div>
 
-<!-- ══════════════════════════════ AUTH ══════════════════════════════ -->
+<!-- AUTH -->
 <div class="screen active" id="screen-auth">
   <div class="green-hdr">
     <div class="hdr-title">Welcome to Splitski</div>
@@ -203,10 +203,10 @@ input[type=file]{display:none}
   <div class="auth-wrap">
     <div class="auth-card">
       <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-login" onclick="showAuthTab('login')">User login</button>
-        <button class="auth-tab" id="tab-register" onclick="showAuthTab('register')">User register</button>
+        <button class="auth-tab active" id="tab-login" data-auth-tab="login">User login</button>
+        <button class="auth-tab" id="tab-register" data-auth-tab="register">User register</button>
       </div>
-      <div id="auth-login" style="margin-top:12px">
+      <div id="auth-login" class="auth-panel">
         <div class="auth-field">
           <label class="auth-label" for="login-email">Email</label>
           <input class="auth-input" id="login-email" type="email" placeholder="you@example.com">
@@ -215,10 +215,10 @@ input[type=file]{display:none}
           <label class="auth-label" for="login-pass">Password</label>
           <input class="auth-input" id="login-pass" type="password" placeholder="••••••••">
         </div>
-        <button class="auth-btn" onclick="handleUserLogin()">Sign in</button>
-        <div class="auth-hint" style="margin-top:8px">Use this demo to explore quests, rewards, and your sheep.</div>
+        <button class="auth-btn" data-action="user-login">Sign in</button>
+        <div class="auth-hint auth-hint-spaced">Use this demo to explore quests, rewards, and your sheep.</div>
       </div>
-      <div id="auth-register" style="margin-top:12px;display:none">
+      <div id="auth-register" class="auth-panel is-hidden">
         <div class="auth-field">
           <label class="auth-label" for="reg-name">Full name</label>
           <input class="auth-input" id="reg-name" type="text" placeholder="Marko Peric">
@@ -231,18 +231,18 @@ input[type=file]{display:none}
           <label class="auth-label" for="reg-pass">Password</label>
           <input class="auth-input" id="reg-pass" type="password" placeholder="Create a password">
         </div>
-        <button class="auth-btn" onclick="handleUserRegister()">Create account</button>
-        <div class="auth-hint" style="margin-top:8px">Administrators cannot register here.</div>
+        <button class="auth-btn" data-action="user-register">Create account</button>
+        <div class="auth-hint auth-hint-spaced">Administrators cannot register here.</div>
       </div>
     </div>
     <div class="auth-card">
-      <div class="auth-hint" style="margin-bottom:10px">Are you an organizer or city admin?</div>
-      <button class="auth-btn" onclick="goNav('admin-login')">Admin login</button>
+      <div class="auth-hint auth-hint-bottom">Are you an organizer or city admin?</div>
+      <button class="auth-btn" data-nav="admin-login">Admin login</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════ ADMIN LOGIN ══════════════════════════════ -->
+<!-- ADMIN LOGIN -->
 <div class="screen" id="screen-admin-login">
   <div class="blue-hdr">
     <div class="hdr-title">Administrator login</div>
@@ -258,14 +258,14 @@ input[type=file]{display:none}
         <label class="auth-label" for="admin-pass">Password</label>
         <input class="auth-input" id="admin-pass" type="password" placeholder="••••••••">
       </div>
-      <button class="auth-btn" onclick="handleAdminLogin()">Enter admin panel</button>
-      <div class="auth-hint" style="margin-top:8px">No self-registration for admins.</div>
+      <button class="auth-btn" data-action="admin-login">Enter admin panel</button>
+      <div class="auth-hint auth-hint-spaced">No self-registration for admins.</div>
     </div>
-    <button class="cancel-btn" onclick="goNav('auth')">Back to user login</button>
+    <button class="cancel-btn" data-nav="auth">Back to user login</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════ HOME ══════════════════════════════ -->
+<!-- HOME -->
 <div class="screen" id="screen-home">
   <div class="home-hdr">
     <div class="greeting">Good morning, Split! 🌊</div>
@@ -278,8 +278,8 @@ input[type=file]{display:none}
   </div>
 
   <div class="sheep-section">
-    <div class="sheep-wrap bouncing" id="sheep-wrap" onclick="bounceSheep()">
-      <svg id="home-sheep" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" style="width:150px;height:150px">
+    <div class="sheep-wrap bouncing" id="sheep-wrap" data-action="bounce-sheep">
+      <svg id="home-sheep" class="home-sheep-svg" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="80" cy="96" rx="52" ry="38" fill="#f5f5f0"/>
         <circle cx="60" cy="79" r="22" fill="#f5f5f0"/>
         <circle cx="80" cy="71" r="24" fill="#f5f5f0"/>
@@ -305,8 +305,8 @@ input[type=file]{display:none}
     </div>
     <div class="sheep-mood">🌸 Happy and blooming</div>
     <div class="sheep-name-lbl">Splitka</div>
-    <div style="width:100%;padding:0 6px">
-      <div class="prog-wrap"><div class="prog-fill" id="prog-fill" style="width:57%"></div></div>
+    <div class="progress-panel">
+      <div class="prog-wrap"><div class="prog-fill progress-fill-initial" id="prog-fill"></div></div>
       <div class="prog-lbl" id="prog-lbl">340 / 600 points → next reward</div>
     </div>
   </div>
@@ -314,15 +314,16 @@ input[type=file]{display:none}
   <div class="sec-hdr"><div class="sec-title">Today's quests</div><div class="sec-sub" id="quests-left">5 left</div></div>
 
   <div class="cat-scroll">
-    <div class="cat-chip active" onclick="filterCat('all',this)">All</div>
-    <div class="cat-chip" onclick="filterCat('scout',this)">📸 Scout</div>
-    <div class="cat-chip" onclick="filterCat('local',this)">☕ Local</div>
-    <div class="cat-chip" onclick="filterCat('green',this)">🌊 Green</div>
-    <div class="cat-chip" onclick="filterCat('community',this)">🤝 Community</div>
+    <div class="cat-chip active" data-cat-filter="all">All</div>
+    <div class="cat-chip" data-cat-filter="scout">📸 Scout</div>
+    <div class="cat-chip" data-cat-filter="local">☕ Local</div>
+    <div class="cat-chip" data-cat-filter="green">🌊 Green</div>
+    <div class="cat-chip" data-cat-filter="community">🤝 Community</div>
   </div>
 
   <div class="quest-list" id="quest-list">
     <div class="qcard" id="q1" data-cat="scout">
+
       <div class="qicon" style="background:#E8FAF8">📸</div>
       <div class="qinfo">
         <div class="qtitle">Photo a pothole</div>
@@ -330,69 +331,69 @@ input[type=file]{display:none}
         <span class="proof-badge pb-photo">📷 Admin review</span>
       </div>
       <div class="qright"><div class="qpts">+50</div>
-        <button class="qbtn" onclick="openPhoto('q1','Photo a pothole',50)">Submit</button>
+        <button class="qbtn" data-photo-qid="q1" data-photo-title="Photo a pothole" data-photo-pts="50">Submit</button>
       </div>
     </div>
     <div class="qcard" id="q2" data-cat="local">
-      <div class="qicon" style="background:#fff3e0">☕</div>
+      <div class="qicon qicon-local-coffee">☕</div>
       <div class="qinfo">
         <div class="qtitle">Coffee at a local cafe</div>
         <div class="qdesc">Skip chains and support Split</div>
         <span class="proof-badge pb-photo">📷 Admin review</span>
       </div>
       <div class="qright"><div class="qpts">+40</div>
-        <button class="qbtn" onclick="openPhoto('q2','Coffee at a local cafe',40)">Submit</button>
+        <button class="qbtn" data-photo-qid="q2" data-photo-title="Coffee at a local cafe" data-photo-pts="40">Submit</button>
       </div>
     </div>
     <div class="qcard" id="q3" data-cat="local">
-      <div class="qicon" style="background:#fce4ec">🫒</div>
+      <div class="qicon qicon-local-market">🫒</div>
       <div class="qinfo">
         <div class="qtitle">Shop at Pazar market</div>
         <div class="qdesc">Photo vegetables or a market receipt</div>
         <span class="proof-badge pb-photo">📷 Admin review</span>
       </div>
       <div class="qright"><div class="qpts">+45</div>
-        <button class="qbtn" onclick="openPhoto('q3','Shop at Pazar market',45)">Submit</button>
+        <button class="qbtn" data-photo-qid="q3" data-photo-title="Shop at Pazar market" data-photo-pts="45">Submit</button>
       </div>
     </div>
     <div class="qcard" id="q4" data-cat="green">
-      <div class="qicon" style="background:#e3f2fd">🌊</div>
+      <div class="qicon qicon-green">🌊</div>
       <div class="qinfo">
         <div class="qtitle">Bacvice beach cleanup</div>
         <div class="qdesc">Organizer scans your QR at the event</div>
         <span class="proof-badge pb-qr">📲 QR scan</span>
       </div>
       <div class="qright"><div class="qpts">+120</div>
-        <button class="qbtn" onclick="goNav('qr')">My QR</button>
+        <button class="qbtn" data-nav="qr">My QR</button>
       </div>
     </div>
     <div class="qcard" id="q5" data-cat="community">
-      <div class="qicon" style="background:#f3e5f5">🤝</div>
+      <div class="qicon qicon-community">🤝</div>
       <div class="qinfo">
         <div class="qtitle">Help a neighbor</div>
         <div class="qdesc">Groceries, a task, or just a chat</div>
         <span class="proof-badge pb-photo">📷 Admin review</span>
       </div>
       <div class="qright"><div class="qpts">+80</div>
-        <button class="qbtn" onclick="openPhoto('q5','Help a neighbor',80)">Submit</button>
+        <button class="qbtn" data-photo-qid="q5" data-photo-title="Help a neighbor" data-photo-pts="80">Submit</button>
       </div>
     </div>
     <div class="qcard done" id="q6" data-cat="green">
-      <div class="qicon" style="background:#f5f5f5">🚌</div>
+      <div class="qicon qicon-done">🚌</div>
       <div class="qinfo">
         <div class="qtitle">Take the bus today</div>
         <div class="qdesc">Leave the car and ease downtown traffic</div>
         <span class="proof-badge pb-photo">📷 Admin review</span>
       </div>
-      <div class="qright"><div class="qpts" style="color:#8a8070">+40</div>
+      <div class="qright"><div class="qpts muted-points">+40</div>
         <button class="qbtn done-btn">✓ Done</button>
       </div>
     </div>
   </div>
-  <div style="height:12px"></div>
+  <div class="page-spacer"></div>
 </div>
 
-<!-- ══════════════════════════════ SHEEP ══════════════════════════════ -->
+<!-- SHEEP -->
 <div class="screen" id="screen-sheep">
   <div class="sheep-big-hdr">
     <svg viewBox="0 0 160 160" class="sheep-big-svg" xmlns="http://www.w3.org/2000/svg">
@@ -428,41 +429,43 @@ input[type=file]{display:none}
   <div class="levels-section">
     <div class="lvl-row"><div class="lvl-icon">🐑</div><div class="lvl-info"><div class="lvl-name">Hungry</div><div class="lvl-pts">0–99 points</div></div><div class="lvl-check">✅</div></div>
     <div class="lvl-row"><div class="lvl-icon">🐑</div><div class="lvl-info"><div class="lvl-name">Okay</div><div class="lvl-pts">100–299 points</div></div><div class="lvl-check">✅</div></div>
+
     <div class="lvl-row current"><div class="lvl-icon">🌸🐑</div><div class="lvl-info"><div class="lvl-name" style="color:#5C7CFF">Happy ← you are here</div><div class="lvl-pts">300–599 points</div></div><div class="lvl-check">📍</div></div>
+
     <div class="lvl-row"><div class="lvl-icon">✨🐑</div><div class="lvl-info"><div class="lvl-name">Blooming</div><div class="lvl-pts">600–999 points</div></div><div class="lvl-check">🔒</div></div>
     <div class="lvl-row"><div class="lvl-icon">👑🐑</div><div class="lvl-info"><div class="lvl-name">Legend of Split</div><div class="lvl-pts">1000+ points</div></div><div class="lvl-check">🔒</div></div>
   </div>
 </div>
 
-<!-- ══════════════════════════════ PHOTO PROOF ══════════════════════════════ -->
+<!-- PHOTO PROOF -->
 <div class="screen" id="screen-photo">
   <div id="step-upload" class="photo-step">
     <div class="green-hdr">
       <div class="hdr-title" id="photo-title">Submit proof</div>
       <div class="hdr-sub">An admin will review your photo</div>
     </div>
-    <div style="padding:18px">
-      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+    <div class="section-padding">
+      <div class="upload-zone" id="upload-zone" data-action="open-file">
         <div class="upload-icon">📷</div>
         <div class="upload-text">Take or upload a photo</div>
         <div class="upload-hint">Receipt, food, location — anything that proves it</div>
       </div>
-      <input type="file" id="file-input" accept="image/*" onchange="handleFile(event)">
-      <div class="photo-preview" id="photo-preview" style="display:none">
+      <input type="file" id="file-input" accept="image/*">
+      <div class="photo-preview is-hidden" id="photo-preview">
         <img id="preview-img" alt="proof">
       </div>
-      <button class="verify-btn" id="verify-btn" onclick="startVerification()" disabled>Submit for review</button>
-      <button class="cancel-btn" onclick="goNav('home')">Cancel</button>
+      <button class="verify-btn" id="verify-btn" data-action="start-verification" disabled>Submit for review</button>
+      <button class="cancel-btn" data-nav="home">Cancel</button>
     </div>
   </div>
 
-  <div id="step-thinking" class="photo-step" style="display:none">
+  <div id="step-thinking" class="photo-step is-hidden">
     <div class="green-hdr">
       <div class="hdr-title">Sending to admin...</div>
       <div class="hdr-sub">Your proof is queued for review</div>
     </div>
-    <div style="padding:18px">
-      <div class="photo-preview" style="display:flex"><img id="thinking-img" alt="review"></div>
+    <div class="section-padding">
+      <div class="photo-preview is-flex"><img id="thinking-img" alt="review"></div>
       <div class="ai-thinking-bar">
         <div class="spinner"></div>
         <div class="ai-thinking-text" id="thinking-text">Submitting evidence...</div>
@@ -470,33 +473,33 @@ input[type=file]{display:none}
     </div>
   </div>
 
-  <div id="step-result" class="photo-step" style="display:none">
+  <div id="step-result" class="photo-step is-hidden">
     <div class="green-hdr" id="result-hdr">
       <div class="hdr-title" id="result-hdr-title">Submitted for review</div>
       <div class="hdr-sub" id="result-hdr-sub">An admin will approve or reject</div>
     </div>
-    <div style="padding:18px">
+    <div class="section-padding">
       <div class="result-card" id="result-card">
         <div class="result-icon" id="result-icon">✅</div>
         <div class="result-title" id="result-title">Proof received</div>
         <div class="pts-earned" id="pts-earned">Awaiting approval</div>
         <div class="result-desc" id="result-desc">You will earn points after admin approval</div>
       </div>
-      <div class="photo-preview" style="display:flex;margin-bottom:14px"><img id="result-img" alt="submitted"></div>
-      <button class="verify-btn" id="result-back-btn" onclick="goNav('home')">Back to quests</button>
+      <div class="photo-preview result-preview"><img id="result-img" alt="submitted"></div>
+      <button class="verify-btn" id="result-back-btn" data-nav="home">Back to quests</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════ QR ══════════════════════════════ -->
+<!-- QR -->
 <div class="screen" id="screen-qr">
   <div class="green-hdr">
     <div class="hdr-title">Your QR code</div>
     <div class="hdr-sub">Show it to the organizer at the event</div>
   </div>
-  <div style="padding:18px;display:flex;flex-direction:column;gap:14px">
+  <div class="qr-content">
     <div class="qr-section">
-      <div style="font-size:12px;color:#8a8070;font-weight:700;margin-bottom:8px">Scanning at Bacvice beach cleanup</div>
+      <div class="qr-event">Scanning at Bacvice beach cleanup</div>
       <div class="qr-box">
         <svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
           <rect width="150" height="150" fill="white"/>
@@ -522,11 +525,11 @@ input[type=file]{display:none}
       <div class="info-title">How it works</div>
       <div class="info-text">Event organizers use the Splitski admin app. They scan your QR when you arrive, you instantly earn 120 points, and your attendance is recorded.</div>
     </div>
-    <button class="verify-btn" onclick="goNav('home')">Back to quests</button>
+    <button class="verify-btn" data-nav="home">Back to quests</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════ REWARDS ══════════════════════════════ -->
+<!-- REWARDS -->
 <div class="screen" id="screen-rewards">
   <div class="red-hdr">
     <div class="hdr-title">Rewards 🎁</div>
@@ -536,11 +539,11 @@ input[type=file]{display:none}
   <div class="rewards-list">
     <div class="rcard">
       <div class="rtop"><div class="remoji">☕</div><div class="rinfo"><div class="rbiz">Konoba Fetivi</div><div class="rtitle">Free coffee + burek</div></div></div>
-      <div class="rfooter"><div class="rcost">⭐ 300 points</div><button class="raction" onclick="redeemReward(300)">Redeem</button></div>
+      <div class="rfooter"><div class="rcost">⭐ 300 points</div><button class="raction" data-reward-cost="300">Redeem</button></div>
     </div>
     <div class="rcard">
       <div class="rtop"><div class="remoji">🫒</div><div class="rinfo"><div class="rbiz">Pazar market</div><div class="rtitle">10% off with vendors</div></div></div>
-      <div class="rfooter"><div class="rcost">⭐ 200 points</div><button class="raction" onclick="redeemReward(200)">Redeem</button></div>
+      <div class="rfooter"><div class="rcost">⭐ 200 points</div><button class="raction" data-reward-cost="200">Redeem</button></div>
     </div>
     <div class="rcard locked">
       <div class="rtop"><div class="remoji">🏛️</div><div class="rinfo"><div class="rbiz">Museum of Croatian Archaeological Monuments</div><div class="rtitle">Free entry for two</div></div></div>
@@ -553,7 +556,7 @@ input[type=file]{display:none}
   </div>
 </div>
 
-<!-- ══════════════════════════════ LEADERBOARD ══════════════════════════════ -->
+<!-- LEADERBOARD -->
 <div class="screen" id="screen-lb">
   <div class="blue-hdr">
     <div class="hdr-title">Leaderboard 🏆</div>
@@ -563,13 +566,15 @@ input[type=file]{display:none}
     <div class="lb-row"><div class="lb-rank gold">1</div><div class="lb-sheep-ic">👑🐑</div><div class="lb-info"><div class="lb-name">Ana Kovacevic</div><div class="lb-hood">Manus</div></div><div class="lb-pts">892</div></div>
     <div class="lb-row"><div class="lb-rank silver">2</div><div class="lb-sheep-ic">✨🐑</div><div class="lb-info"><div class="lb-name">Ivan Juric</div><div class="lb-hood">Manus</div></div><div class="lb-pts">711</div></div>
     <div class="lb-row"><div class="lb-rank bronze">3</div><div class="lb-sheep-ic">🌸🐑</div><div class="lb-info"><div class="lb-name">Petra Blazevic</div><div class="lb-hood">Manus</div></div><div class="lb-pts">580</div></div>
+
     <div class="lb-row me"><div class="lb-rank" style="color:#5C7CFF">4</div><div class="lb-sheep-ic">🌸🐑</div><div class="lb-info"><div class="lb-name" style="color:#5C7CFF">Marko Peric (you)</div><div class="lb-hood">Manus</div></div><div class="lb-pts" id="lb-pts">340</div></div>
+
     <div class="lb-row"><div class="lb-rank">5</div><div class="lb-sheep-ic">🐑</div><div class="lb-info"><div class="lb-name">Tomislav Grgic</div><div class="lb-hood">Manus</div></div><div class="lb-pts">210</div></div>
     <div class="lb-row"><div class="lb-rank">6</div><div class="lb-sheep-ic">🐑</div><div class="lb-info"><div class="lb-name">Maja Simic</div><div class="lb-hood">Manus</div></div><div class="lb-pts">145</div></div>
   </div>
 </div>
 
-<!-- ══════════════════════════════ ORGANIZER ══════════════════════════════ -->
+<!-- ORGANIZER -->
 <div class="screen" id="screen-org">
   <div class="green-hdr">
     <div class="hdr-title">Admin panel</div>
@@ -586,7 +591,7 @@ input[type=file]{display:none}
     <div class="org-card">
       <div class="org-event">Bacvice beach cleanup</div>
       <div class="org-meta">Today, 09:00 — 120 points per attendee</div>
-      <button class="scan-btn" onclick="simulateScan()">📲 Scan QR code</button>
+      <button class="scan-btn" data-action="simulate-scan">📲 Scan QR code</button>
       <div class="attendee-list" id="att-list">
         <div class="att-row"><div><div class="att-name">Ana Kovacevic</div><div class="att-time">09:04</div></div><div class="att-pts">+120</div></div>
         <div class="att-row"><div><div class="att-name">Ivan Juric</div><div class="att-time">09:11</div></div><div class="att-pts">+120</div></div>
@@ -599,14 +604,14 @@ input[type=file]{display:none}
   </div>
 </div>
 
-<!-- ══════════════════════════════ NAV ══════════════════════════════ -->
+<!-- NAV -->
 <div class="bottom-nav">
-  <div class="nav-item active" id="nav-home" onclick="goNav('home')"><div class="nav-icon">🏠</div><span>Home</span></div>
-  <div class="nav-item" id="nav-sheep" onclick="goNav('sheep')"><div class="nav-icon">🐑</div><span>Splitka</span></div>
-  <div class="nav-item" id="nav-qr" onclick="goNav('qr')"><div class="nav-icon">📲</div><span>My QR</span></div>
-  <div class="nav-item" id="nav-rewards" onclick="goNav('rewards')"><div class="nav-icon">🎁</div><span>Rewards</span></div>
-  <div class="nav-item" id="nav-lb" onclick="goNav('lb')"><div class="nav-icon">🏆</div><span>Ranks</span></div>
-  <div class="nav-item" id="nav-org" onclick="goNav('org')"><div class="nav-icon">🎫</div><span>Admin</span></div>
+  <div class="nav-item active" id="nav-home" data-nav="home"><div class="nav-icon">🏠</div><span>Home</span></div>
+  <div class="nav-item" id="nav-sheep" data-nav="sheep"><div class="nav-icon">🐑</div><span>Splitka</span></div>
+  <div class="nav-item" id="nav-qr" data-nav="qr"><div class="nav-icon">📲</div><span>My QR</span></div>
+  <div class="nav-item" id="nav-rewards" data-nav="rewards"><div class="nav-icon">🎁</div><span>Rewards</span></div>
+  <div class="nav-item" id="nav-lb" data-nav="lb"><div class="nav-icon">🏆</div><span>Ranks</span></div>
+  <div class="nav-item" id="nav-org" data-nav="org"><div class="nav-icon">🎫</div><span>Admin</span></div>
 </div>
 </div>
 
@@ -888,5 +893,6 @@ function simulateScan() {
 
 goNav('auth');
 </script>
+
 </body>
 </html>
