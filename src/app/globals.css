@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { font-family: 'Nunito', system-ui, sans-serif; }
+
+html, body {
+  height: 100%; width: 100%; overflow: hidden;
+  background: #111;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body { display: flex; justify-content: center; }
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+.bouncing { animation: bounce 0.45s ease; }
+
+input[type=file] { display: none; }
+
+button:active:not(:disabled) { transform: scale(0.97); transition: transform 0.1s; }
