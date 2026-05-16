@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { IconClockHour4, IconListCheck, IconGift } from '@tabler/icons-react';
+import { IconClockHour4, IconListCheck, IconGift, IconQrcode } from '@tabler/icons-react';
 
 const items = [
   { href: '/admin', label: 'Requests', icon: IconClockHour4 },
   { href: '/admin/quests', label: 'Quests', icon: IconListCheck },
-  { href: '/admin/rewards', label: 'Rewards', icon: IconGift }
+  { href: '/admin/rewards', label: 'Rewards', icon: IconGift },
+  { href: '/admin/scan', label: 'Scan', icon: IconQrcode }
 ];
 
 export function AdminNav() {

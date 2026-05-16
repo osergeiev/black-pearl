@@ -98,7 +98,7 @@ export function ProofForm({ quest }: { quest: Quest }) {
             <img src={quest.image_url} alt={quest.title} className="w-full h-full object-cover" />
           </div>
         )}
-        <input ref={inputRef} type="file" accept="image/*" onChange={handleFile} />
+        <input ref={inputRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
         {!preview ? (
           <div
             onClick={() => inputRef.current?.click()}

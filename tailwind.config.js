@@ -8,9 +8,9 @@ module.exports = {
       },
       colors: {
         brand: {
-          green: '#5C7CFF',
-          'green-light': '#8EA2FF',
-          'green-bg': '#EEF2FF',
+          green: '#00626F',
+          'green-light': '#1A8A99',
+          'green-bg': '#E0F0F2',
           teal: '#21A6A1',
           'teal-bg': '#E8FAF8',
           coral: '#FF6B6B',
