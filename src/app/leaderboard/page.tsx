@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function LeaderboardPage() {
   const { profile } = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: leaders } = await supabase
     .from('profiles')
     .select('id, name, points, neighborhood')

@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function SheepPage() {
   const { profile } = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
   const { count: questsDone } = await supabase
     .from('requests')
     .select('*', { count: 'exact', head: true })

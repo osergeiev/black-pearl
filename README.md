@@ -61,7 +61,7 @@ cd splitski-app
 npm install
 ```
 
-### 2. Create a Supabase project dwzM5@Wa/Ad!HvY
+### 2. Create a Supabase project
 
 1. Go to <https://supabase.com> → **New project**
 2. Pick any name + password, region close to you (Frankfurt for Split)

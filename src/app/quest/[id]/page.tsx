@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function QuestPage({ params }: { params: { id: string } }) {
   await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: quest } = await supabase.from('quests').select('*').eq('id', params.id).single<Quest>();
   if (!quest) notFound();
   return <ProofForm quest={quest} />;

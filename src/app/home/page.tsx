@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const { profile } = await requireUser();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: quests } = await supabase.from('quests').select('*').eq('active', true).order('created_at');
   const { data: myRequests } = await supabase

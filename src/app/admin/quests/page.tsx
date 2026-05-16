@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminQuestsPage() {
   await requireAdmin();
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: quests } = await supabase.from('quests').select('*').order('created_at', { ascending: false });
   return (
     <>

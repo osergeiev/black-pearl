@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminPage() {
   await requireAdmin();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data: pending } = await supabase
     .from('requests')
