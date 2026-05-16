@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Splitski 🐑</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:'Nunito',sans-serif;background:#1a1a1a;display:flex;justify-content:center;align-items:flex-start;overflow:hidden}
+.phone-wrap{width:100%;max-width:430px;height:100dvh;display:flex;flex-direction:column;background:#faf8f4;position:relative;overflow:hidden}
+.screen{display:none;flex:1;min-height:100%;height:100%;overflow-y:auto;padding-bottom:76px;flex-direction:column}
+.screen.active{display:flex;height:100%}
+
+/* ── NAV ── */
+.bottom-nav{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e8e2d8;display:flex;z-index:200;padding-bottom:env(safe-area-inset-bottom)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 0 6px;cursor:pointer;gap:2px;color:#b0a898;font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;transition:color .15s}
+.nav-item.active{color:#2d5a27}
+.nav-icon{font-size:20px}
+.nav-hidden .bottom-nav{display:none}
+.nav-hidden .screen{padding-bottom:0}
+
+/* ── HEADERS ── */
+.green-hdr{background:#2d5a27;padding:44px 20px 24px;color:#fff;flex-shrink:0}
+.blue-hdr{background:#1a3a6e;padding:44px 20px 24px;color:#fff;flex-shrink:0}
+.red-hdr{background:#8c3f2d;padding:44px 20px 24px;color:#fff;flex-shrink:0}
+.hdr-title{font-size:22px;font-weight:900;margin-bottom:3px}
+.hdr-sub{font-size:13px;opacity:.8;font-weight:600}
+
+/* ── AUTH ── */
+.auth-wrap{padding:24px 18px 18px;display:flex;flex-direction:column;gap:16px;flex:1}
+.auth-card{background:#fff;border-radius:16px;padding:16px;border:1.5px solid #f0ebe3}
+.auth-tabs{display:flex;gap:8px}
+.auth-tab{flex:1;border:1.5px solid #e8e2d8;background:#fff;border-radius:12px;padding:10px 12px;font-weight:800;font-size:12px;cursor:pointer}
+.auth-tab.active{border-color:#2d5a27;color:#2d5a27;background:#f4faf3}
+.auth-field{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.auth-label{font-size:11px;font-weight:800;color:#6b6055;text-transform:uppercase;letter-spacing:.4px}
+.auth-input{border:1.5px solid #e8e2d8;border-radius:12px;padding:10px 12px;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif}
+.auth-btn{width:100%;background:#2d5a27;border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;padding:12px;border-radius:12px;cursor:pointer}
+.auth-hint{font-size:11px;color:#8a8070;font-weight:600;line-height:1.4}
+
+/* ── HOME ── */
+.home-hdr{background:#2d5a27;padding:44px 20px 20px;color:#fff;flex-shrink:0}
+.greeting{font-size:12px;opacity:.75;margin-bottom:3px;font-weight:700}
+.user-name{font-size:21px;font-weight:900;margin-bottom:14px}
+.pts-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pts-badge{background:rgba(255,255,255,.2);border-radius:20px;padding:5px 14px;font-size:14px;font-weight:900}
+.lvl-badge{background:rgba(255,255,255,.15);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700}
+.streak-badge{margin-left:auto;background:rgba(255,255,255,.15);border-radius:20px;padding:5px 10px;font-size:11px;font-weight:700}
+
+.sheep-section{display:flex;flex-direction:column;align-items:center;padding:20px 20px 12px;flex-shrink:0}
+.sheep-wrap{width:150px;height:150px;cursor:pointer}
+.sheep-mood{font-size:12px;font-weight:800;color:#2d5a27;margin-top:6px}
+.sheep-name-lbl{font-size:14px;font-weight:900;color:#1a1a1a;margin-top:2px}
+.prog-wrap{width:100%;background:#e8e2d8;border-radius:10px;height:7px;margin:10px 0 3px;overflow:hidden}
+.prog-fill{height:7px;border-radius:10px;background:#2d5a27;transition:width .6s ease}
+.prog-lbl{font-size:11px;color:#8a8070;font-weight:700}
+
+
+.sec-hdr{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.sec-title{font-size:15px;font-weight:800;color:#1a1a1a}
+.sec-sub{font-size:11px;color:#8a8070;font-weight:700}
+.cat-scroll{display:flex;gap:7px;padding:0 14px 10px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+.cat-scroll::-webkit-scrollbar{display:none}
+.cat-chip{background:#fff;border:1.5px solid #e8e2d8;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:800;color:#6b6055;white-space:nowrap;cursor:pointer;transition:all .15s}
+.cat-chip.active{background:#2d5a27;border-color:#2d5a27;color:#fff}
+
+.quest-list{padding:0 14px;display:flex;flex-direction:column;gap:9px}
+.qcard{background:#fff;border-radius:14px;padding:13px;display:flex;align-items:center;gap:11px;border:1.5px solid #f0ebe3;transition:opacity .2s}
+.qcard.done{opacity:.45}
+.qicon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.qinfo{flex:1;min-width:0}
+.qtitle{font-size:12px;font-weight:800;color:#1a1a1a;margin-bottom:2px;line-height:1.2}
+.qdesc{font-size:10px;color:#8a8070;font-weight:600;line-height:1.3}
+.proof-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;padding:2px 7px;border-radius:8px;margin-top:3px}
+.pb-photo{background:#e8f4ff;color:#185FA5}
+.pb-qr{background:#e8f5e8;color:#2d5a27}
+.qright{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.qpts{font-size:13px;font-weight:900;color:#2d5a27}
+.qbtn{background:#2d5a27;border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:10px;font-weight:800;padding:6px 11px;border-radius:18px;cursor:pointer;white-space:nowrap}
+.qbtn:active{transform:scale(.94)}
+.qbtn.done-btn{background:#e8e2d8;color:#8a8070;cursor:default}
+
+/* ── SHEEP SCREEN ── */
+.sheep-big-hdr{background:#2d5a27;padding:44px 20px 28px;display:flex;flex-direction:column;align-items:center;color:#fff;flex-shrink:0}
+.sheep-big-svg{width:180px;height:180px}
+.sheep-big-name{font-size:24px;font-weight:900;margin-top:10px}
+.sheep-big-mood{font-size:13px;opacity:.8;font-weight:700;margin-top:3px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 14px}
+.stat-card{background:#fff;border-radius:13px;padding:13px;text-align:center;border:1.5px solid #f0ebe3}
+.stat-num{font-size:26px;font-weight:900;color:#2d5a27}
+.stat-lbl{font-size:10px;font-weight:800;color:#8a8070;text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.levels-section{padding:0 14px 20px}
+.lvl-row{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid #f0ebe3}
+.lvl-icon{font-size:26px;width:40px;text-align:center;flex-shrink:0}
+.lvl-info{flex:1}
+.lvl-name{font-size:12px;font-weight:800;color:#1a1a1a}
+.lvl-pts{font-size:10px;color:#8a8070;font-weight:700}
+.lvl-check{font-size:16px}
+.lvl-row.current{background:#f4faf3;border-radius:10px;padding:11px 10px;border:none;margin-bottom:1px}
+
+/* ── REWARDS ── */
+.rewards-list{padding:14px;display:flex;flex-direction:column;gap:11px}
+.rcard{background:#fff;border-radius:14px;padding:15px;border:1.5px solid #f0ebe3}
+.rcard.locked{opacity:.55}
+.rtop{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.remoji{font-size:30px}
+.rinfo{flex:1}
+.rbiz{font-size:10px;font-weight:800;color:#8a8070;text-transform:uppercase;letter-spacing:.4px}
+.rtitle{font-size:13px;font-weight:800;color:#1a1a1a}
+.rfooter{display:flex;align-items:center;justify-content:space-between}
+.rcost{font-size:12px;font-weight:900;color:#2d5a27}
+.raction{background:#2d5a27;border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;padding:8px 15px;border-radius:18px;cursor:pointer}
+.raction.locked-btn{background:#e8e2d8;color:#8a8070;cursor:default}
+.your-pts-pill{background:rgba(255,255,255,.2);border-radius:12px;padding:9px 14px;margin-top:14px;display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:900}
+
+/* ── LEADERBOARD ── */
+.lb-list{padding:14px;display:flex;flex-direction:column;gap:9px}
+.lb-row{background:#fff;border-radius:13px;padding:13px 15px;display:flex;align-items:center;gap:11px;border:1.5px solid #f0ebe3}
+.lb-row.me{border-color:#2d5a27;background:#f4faf3}
+.lb-rank{font-size:16px;font-weight:900;width:28px;text-align:center;color:#b0a898}
+.lb-rank.gold{color:#d4a017}
+.lb-rank.silver{color:#9e9e9e}
+.lb-rank.bronze{color:#c17c3a}
+.lb-sheep-ic{font-size:26px}
+.lb-info{flex:1}
+.lb-name{font-size:13px;font-weight:800;color:#1a1a1a}
+.lb-hood{font-size:10px;color:#8a8070;font-weight:700}
+.lb-pts{font-size:15px;font-weight:900;color:#2d5a27}
+
+/* ── PHOTO PROOF ── */
+.photo-step{flex:1}
+.upload-zone{border:2px dashed #c8e6c9;border-radius:14px;padding:28px 16px;text-align:center;cursor:pointer;background:#f4faf3;margin-bottom:14px}
+.upload-icon{font-size:38px;margin-bottom:7px}
+.upload-text{font-size:13px;font-weight:800;color:#2d5a27}
+.upload-hint{font-size:11px;color:#8a8070;font-weight:600;margin-top:3px}
+.photo-preview{width:100%;border-radius:12px;overflow:hidden;background:#e8e2d8;display:flex;align-items:center;justify-content:center;height:150px;margin-bottom:14px}
+.photo-preview img{width:100%;height:100%;object-fit:cover}
+.verify-btn{width:100%;background:#2d5a27;border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;padding:13px;border-radius:13px;cursor:pointer;margin-bottom:6px}
+.verify-btn:disabled{background:#b0a898;cursor:not-allowed}
+.cancel-btn{width:100%;background:none;border:none;color:#8a8070;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;padding:9px;cursor:pointer}
+.ai-thinking-bar{display:flex;align-items:center;gap:10px;background:#f4faf3;border-radius:12px;padding:13px;margin-bottom:14px}
+.spinner{width:22px;height:22px;border:3px solid #c8e6c9;border-top-color:#2d5a27;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-thinking-text{font-size:12px;font-weight:700;color:#2d5a27}
+.result-card{border-radius:14px;padding:16px;margin-bottom:14px;text-align:center}
+.result-card.success{background:#f4faf3;border:1.5px solid #c8e6c9}
+.result-card.fail{background:#fff5f5;border:1.5px solid #ffc8c8}
+.result-icon{font-size:38px;margin-bottom:7px}
+.result-title{font-size:15px;font-weight:900;margin-bottom:3px}
+.pts-earned{font-size:26px;font-weight:900;color:#2d5a27;margin:7px 0}
+.result-desc{font-size:11px;color:#8a8070;font-weight:600}
+input[type=file]{display:none}
+
+/* ── QR ── */
+.qr-section{text-align:center;padding:8px 0 4px}
+.qr-box{background:#fff;border:1.5px solid #e8e2d8;border-radius:14px;padding:18px;display:inline-block;margin:10px 0}
+.qr-user{font-size:14px;font-weight:900;color:#1a1a1a;margin-top:8px}
+.qr-id{font-size:12px;color:#8a8070;font-weight:700;margin-top:2px}
+.info-box{background:#f4faf3;border-radius:13px;padding:14px;border:1.5px solid #c8e6c9}
+.info-title{font-size:12px;font-weight:800;color:#2d5a27;margin-bottom:4px}
+.info-text{font-size:11px;color:#3a3a3a;font-weight:600;line-height:1.5}
+
+/* ── ORGANIZER ── */
+.org-section{padding:14px;display:flex;flex-direction:column;gap:11px}
+.org-card{background:#fff;border-radius:14px;padding:15px;border:1.5px solid #f0ebe3}
+.org-event{font-size:14px;font-weight:800;color:#1a1a1a;margin-bottom:3px}
+.org-meta{font-size:11px;color:#8a8070;font-weight:600;margin-bottom:12px}
+.scan-btn{background:#2d5a27;border:none;color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;padding:10px 18px;border-radius:18px;cursor:pointer}
+.scan-btn:active{transform:scale(.96)}
+.attendee-list{margin-top:11px;display:flex;flex-direction:column;gap:6px}
+.att-row{display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:#f4faf3;border-radius:10px}
+.att-name{font-size:12px;font-weight:800;color:#1a1a1a}
+.att-time{font-size:10px;color:#8a8070;font-weight:600}
+.att-pts{font-size:12px;font-weight:900;color:#2d5a27}
+.review-actions{display:flex;align-items:center;gap:6px}
+.review-btn{border:none;border-radius:10px;padding:6px 9px;font-size:10px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.review-btn.approve{background:#2d5a27;color:#fff}
+.review-btn.deny{background:#f7e7e7;color:#8c3f2d}
+.count-card{background:#fff;border-radius:13px;padding:14px;border:1.5px solid #f0ebe3;text-align:center}
+.count-num{font-size:32px;font-weight:900;color:#2d5a27}
+.count-lbl{font-size:11px;color:#8a8070;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
+
+/* ── TOAST ── */
+.toast{position:absolute;top:16px;left:50%;transform:translateX(-50%);background:#2d5a27;color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;padding:11px 18px;border-radius:20px;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;max-width:90%}
+.toast.show{opacity:1}
+
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.bouncing{animation:bounce .45s ease}
+</style>
+</head>
+<body>
+<div class="phone-wrap">
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════ AUTH ══════════════════════════════ -->
+<div class="screen active" id="screen-auth">
+  <div class="green-hdr">
+    <div class="hdr-title">Welcome to Splitski</div>
+    <div class="hdr-sub">Sign in or create your account</div>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="showAuthTab('login')">User login</button>
+        <button class="auth-tab" id="tab-register" onclick="showAuthTab('register')">User register</button>
+      </div>
+      <div id="auth-login" style="margin-top:12px">
+        <div class="auth-field">
+          <label class="auth-label" for="login-email">Email</label>
+          <input class="auth-input" id="login-email" type="email" placeholder="you@example.com">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="login-pass">Password</label>
+          <input class="auth-input" id="login-pass" type="password" placeholder="••••••••">
+        </div>
+        <button class="auth-btn" onclick="handleUserLogin()">Sign in</button>
+        <div class="auth-hint" style="margin-top:8px">Use this demo to explore quests, rewards, and your sheep.</div>
+      </div>
+      <div id="auth-register" style="margin-top:12px;display:none">
+        <div class="auth-field">
+          <label class="auth-label" for="reg-name">Full name</label>
+          <input class="auth-input" id="reg-name" type="text" placeholder="Marko Peric">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="reg-email">Email</label>
+          <input class="auth-input" id="reg-email" type="email" placeholder="you@example.com">
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="reg-pass">Password</label>
+          <input class="auth-input" id="reg-pass" type="password" placeholder="Create a password">
+        </div>
+        <button class="auth-btn" onclick="handleUserRegister()">Create account</button>
+        <div class="auth-hint" style="margin-top:8px">Administrators cannot register here.</div>
+      </div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-hint" style="margin-bottom:10px">Are you an organizer or city admin?</div>
+      <button class="auth-btn" onclick="goNav('admin-login')">Admin login</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ ADMIN LOGIN ══════════════════════════════ -->
+<div class="screen" id="screen-admin-login">
+  <div class="blue-hdr">
+    <div class="hdr-title">Administrator login</div>
+    <div class="hdr-sub">Admins are created by the city office</div>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-field">
+        <label class="auth-label" for="admin-email">Admin email</label>
+        <input class="auth-input" id="admin-email" type="email" placeholder="admin@split.hr">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" for="admin-pass">Password</label>
+        <input class="auth-input" id="admin-pass" type="password" placeholder="••••••••">
+      </div>
+      <button class="auth-btn" onclick="handleAdminLogin()">Enter admin panel</button>
+      <div class="auth-hint" style="margin-top:8px">No self-registration for admins.</div>
+    </div>
+    <button class="cancel-btn" onclick="goNav('auth')">Back to user login</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ HOME ══════════════════════════════ -->
+<div class="screen" id="screen-home">
+  <div class="home-hdr">
+    <div class="greeting">Good morning, Split! 🌊</div>
+    <div class="user-name">Marko Peric</div>
+    <div class="pts-row">
+      <div class="pts-badge" id="home-pts">⭐ 340 pts</div>
+      <div class="lvl-badge">Splitski Regular</div>
+      <div class="streak-badge">🔥 5 days</div>
+    </div>
+  </div>
+
+  <div class="sheep-section">
+    <div class="sheep-wrap bouncing" id="sheep-wrap" onclick="bounceSheep()">
+      <svg id="home-sheep" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" style="width:150px;height:150px">
+        <ellipse cx="80" cy="96" rx="52" ry="38" fill="#f5f5f0"/>
+        <circle cx="60" cy="79" r="22" fill="#f5f5f0"/>
+        <circle cx="80" cy="71" r="24" fill="#f5f5f0"/>
+        <circle cx="100" cy="76" r="20" fill="#f5f5f0"/>
+        <circle cx="70" cy="66" r="18" fill="#f5f5f0"/>
+        <circle cx="90" cy="63" r="16" fill="#f5f5f0"/>
+        <ellipse cx="80" cy="113" rx="18" ry="14" fill="#e8e4da"/>
+        <circle cx="72" cy="109" r="5" fill="#3a3a3a"/><circle cx="88" cy="109" r="5" fill="#3a3a3a"/>
+        <circle cx="73" cy="108" r="2" fill="#fff"/><circle cx="89" cy="108" r="2" fill="#fff"/>
+        <ellipse cx="80" cy="116" rx="6" ry="3" fill="#f4a0a0"/>
+        <line x1="65" y1="126" x2="62" y2="148" stroke="#6b5e4e" stroke-width="5" stroke-linecap="round"/>
+        <line x1="72" y1="129" x2="70" y2="150" stroke="#6b5e4e" stroke-width="5" stroke-linecap="round"/>
+        <line x1="88" y1="129" x2="90" y2="150" stroke="#6b5e4e" stroke-width="5" stroke-linecap="round"/>
+        <line x1="95" y1="126" x2="98" y2="148" stroke="#6b5e4e" stroke-width="5" stroke-linecap="round"/>
+        <ellipse cx="50" cy="66" rx="7" ry="10" fill="#e8e4da"/>
+        <ellipse cx="110" cy="66" rx="7" ry="10" fill="#e8e4da"/>
+        <g id="home-flowers">
+          <circle cx="28" cy="91" r="6" fill="#ffb6c1"/><circle cx="28" cy="79" r="5" fill="#ffe4b5"/>
+          <circle cx="18" cy="86" r="4" fill="#98fb98"/><circle cx="132" cy="89" r="6" fill="#dda0dd"/>
+          <circle cx="140" cy="79" r="5" fill="#87ceeb"/>
+        </g>
+      </svg>
+    </div>
+    <div class="sheep-mood">🌸 Happy and blooming</div>
+    <div class="sheep-name-lbl">Splitka</div>
+    <div style="width:100%;padding:0 6px">
+      <div class="prog-wrap"><div class="prog-fill" id="prog-fill" style="width:57%"></div></div>
+      <div class="prog-lbl" id="prog-lbl">340 / 600 points → next reward</div>
+    </div>
+  </div>
+
+  <div class="sec-hdr"><div class="sec-title">Today's quests</div><div class="sec-sub" id="quests-left">5 left</div></div>
+
+  <div class="cat-scroll">
+    <div class="cat-chip active" onclick="filterCat('all',this)">All</div>
+    <div class="cat-chip" onclick="filterCat('scout',this)">📸 Scout</div>
+    <div class="cat-chip" onclick="filterCat('local',this)">☕ Local</div>
+    <div class="cat-chip" onclick="filterCat('green',this)">🌊 Green</div>
+    <div class="cat-chip" onclick="filterCat('community',this)">🤝 Community</div>
+  </div>
+
+  <div class="quest-list" id="quest-list">
+    <div class="qcard" id="q1" data-cat="scout">
+      <div class="qicon" style="background:#e8f5e8">📸</div>
+      <div class="qinfo">
+        <div class="qtitle">Photo a pothole</div>
+        <div class="qdesc">Add it to the map so the city can fix it</div>
+        <span class="proof-badge pb-photo">📷 Admin review</span>
+      </div>
+      <div class="qright"><div class="qpts">+50</div>
+        <button class="qbtn" onclick="openPhoto('q1','Photo a pothole',50)">Submit</button>
+      </div>
+    </div>
+    <div class="qcard" id="q2" data-cat="local">
+      <div class="qicon" style="background:#fff3e0">☕</div>
+      <div class="qinfo">
+        <div class="qtitle">Coffee at a local cafe</div>
+        <div class="qdesc">Skip chains and support Split</div>
+        <span class="proof-badge pb-photo">📷 Admin review</span>
+      </div>
+      <div class="qright"><div class="qpts">+40</div>
+        <button class="qbtn" onclick="openPhoto('q2','Coffee at a local cafe',40)">Submit</button>
+      </div>
+    </div>
+    <div class="qcard" id="q3" data-cat="local">
+      <div class="qicon" style="background:#fce4ec">🫒</div>
+      <div class="qinfo">
+        <div class="qtitle">Shop at Pazar market</div>
+        <div class="qdesc">Photo vegetables or a market receipt</div>
+        <span class="proof-badge pb-photo">📷 Admin review</span>
+      </div>
+      <div class="qright"><div class="qpts">+45</div>
+        <button class="qbtn" onclick="openPhoto('q3','Shop at Pazar market',45)">Submit</button>
+      </div>
+    </div>
+    <div class="qcard" id="q4" data-cat="green">
+      <div class="qicon" style="background:#e3f2fd">🌊</div>
+      <div class="qinfo">
+        <div class="qtitle">Bacvice beach cleanup</div>
+        <div class="qdesc">Organizer scans your QR at the event</div>
+        <span class="proof-badge pb-qr">📲 QR scan</span>
+      </div>
+      <div class="qright"><div class="qpts">+120</div>
+        <button class="qbtn" onclick="goNav('qr')">My QR</button>
+      </div>
+    </div>
+    <div class="qcard" id="q5" data-cat="community">
+      <div class="qicon" style="background:#f3e5f5">🤝</div>
+      <div class="qinfo">
+        <div class="qtitle">Help a neighbor</div>
+        <div class="qdesc">Groceries, a task, or just a chat</div>
+        <span class="proof-badge pb-photo">📷 Admin review</span>
+      </div>
+      <div class="qright"><div class="qpts">+80</div>
+        <button class="qbtn" onclick="openPhoto('q5','Help a neighbor',80)">Submit</button>
+      </div>
+    </div>
+    <div class="qcard done" id="q6" data-cat="green">
+      <div class="qicon" style="background:#f5f5f5">🚌</div>
+      <div class="qinfo">
+        <div class="qtitle">Take the bus today</div>
+        <div class="qdesc">Leave the car and ease downtown traffic</div>
+        <span class="proof-badge pb-photo">📷 Admin review</span>
+      </div>
+      <div class="qright"><div class="qpts" style="color:#8a8070">+40</div>
+        <button class="qbtn done-btn">✓ Done</button>
+      </div>
+    </div>
+  </div>
+  <div style="height:12px"></div>
+</div>
+
+<!-- ══════════════════════════════ SHEEP ══════════════════════════════ -->
+<div class="screen" id="screen-sheep">
+  <div class="sheep-big-hdr">
+    <svg viewBox="0 0 160 160" class="sheep-big-svg" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="80" cy="96" rx="52" ry="38" fill="#f5f5f0"/>
+      <circle cx="60" cy="79" r="22" fill="#f5f5f0"/><circle cx="80" cy="71" r="24" fill="#f5f5f0"/>
+      <circle cx="100" cy="76" r="20" fill="#f5f5f0"/><circle cx="70" cy="66" r="18" fill="#f5f5f0"/>
+      <circle cx="90" cy="63" r="16" fill="#f5f5f0"/>
+      <ellipse cx="80" cy="113" rx="18" ry="14" fill="#e8e4da"/>
+      <circle cx="72" cy="109" r="5" fill="#3a3a3a"/><circle cx="88" cy="109" r="5" fill="#3a3a3a"/>
+      <circle cx="73" cy="108" r="2" fill="#fff"/><circle cx="89" cy="108" r="2" fill="#fff"/>
+      <ellipse cx="80" cy="116" rx="6" ry="3" fill="#f4a0a0"/>
+      <line x1="65" y1="126" x2="62" y2="148" stroke="#6b5e4e" stroke-width="5" stroke-linecap="round"/>
+      <line x1="72" y1="129" x2="70" y2="150" stroke="#6b5e4e" stroke-width="5" stroke-linecap="round"/>
+      <line x1="88" y1="129" x2="90" y2="150" stroke="#6b5e4e" stroke-width="5" stroke-linecap="round"/>
+      <line x1="95" y1="126" x2="98" y2="148" stroke="#6b5e4e" stroke-width="5" stroke-linecap="round"/>
+      <ellipse cx="50" cy="66" rx="7" ry="10" fill="#e8e4da"/>
+      <ellipse cx="110" cy="66" rx="7" ry="10" fill="#e8e4da"/>
+      <circle cx="28" cy="91" r="6" fill="#ffb6c1"/><circle cx="28" cy="79" r="5" fill="#ffe4b5"/>
+      <circle cx="18" cy="86" r="4" fill="#98fb98"/><circle cx="132" cy="89" r="6" fill="#dda0dd"/>
+      <circle cx="140" cy="79" r="5" fill="#87ceeb"/>
+      <text x="80" y="56" text-anchor="middle" font-size="16">⭐</text>
+    </svg>
+    <div class="sheep-big-name">Splitka</div>
+    <div class="sheep-big-mood">🌸 Happy and blooming — keep going!</div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num" id="sheep-pts">340</div><div class="stat-lbl">Total points</div></div>
+    <div class="stat-card"><div class="stat-num">5</div><div class="stat-lbl">Day streak 🔥</div></div>
+    <div class="stat-card"><div class="stat-num" id="sheep-quests">12</div><div class="stat-lbl">Quests completed</div></div>
+    <div class="stat-card"><div class="stat-num">3</div><div class="stat-lbl">Rewards earned</div></div>
+  </div>
+  <div class="sec-hdr"><div class="sec-title">Sheep levels</div></div>
+  <div class="levels-section">
+    <div class="lvl-row"><div class="lvl-icon">🐑</div><div class="lvl-info"><div class="lvl-name">Hungry</div><div class="lvl-pts">0–99 points</div></div><div class="lvl-check">✅</div></div>
+    <div class="lvl-row"><div class="lvl-icon">🐑</div><div class="lvl-info"><div class="lvl-name">Okay</div><div class="lvl-pts">100–299 points</div></div><div class="lvl-check">✅</div></div>
+    <div class="lvl-row current"><div class="lvl-icon">🌸🐑</div><div class="lvl-info"><div class="lvl-name" style="color:#2d5a27">Happy ← you are here</div><div class="lvl-pts">300–599 points</div></div><div class="lvl-check">📍</div></div>
+    <div class="lvl-row"><div class="lvl-icon">✨🐑</div><div class="lvl-info"><div class="lvl-name">Blooming</div><div class="lvl-pts">600–999 points</div></div><div class="lvl-check">🔒</div></div>
+    <div class="lvl-row"><div class="lvl-icon">👑🐑</div><div class="lvl-info"><div class="lvl-name">Legend of Split</div><div class="lvl-pts">1000+ points</div></div><div class="lvl-check">🔒</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ PHOTO PROOF ══════════════════════════════ -->
+<div class="screen" id="screen-photo">
+  <div id="step-upload" class="photo-step">
+    <div class="green-hdr">
+      <div class="hdr-title" id="photo-title">Submit proof</div>
+      <div class="hdr-sub">An admin will review your photo</div>
+    </div>
+    <div style="padding:18px">
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+        <div class="upload-icon">📷</div>
+        <div class="upload-text">Take or upload a photo</div>
+        <div class="upload-hint">Receipt, food, location — anything that proves it</div>
+      </div>
+      <input type="file" id="file-input" accept="image/*" onchange="handleFile(event)">
+      <div class="photo-preview" id="photo-preview" style="display:none">
+        <img id="preview-img" alt="proof">
+      </div>
+      <button class="verify-btn" id="verify-btn" onclick="startVerification()" disabled>Submit for review</button>
+      <button class="cancel-btn" onclick="goNav('home')">Cancel</button>
+    </div>
+  </div>
+
+  <div id="step-thinking" class="photo-step" style="display:none">
+    <div class="green-hdr">
+      <div class="hdr-title">Sending to admin...</div>
+      <div class="hdr-sub">Your proof is queued for review</div>
+    </div>
+    <div style="padding:18px">
+      <div class="photo-preview" style="display:flex"><img id="thinking-img" alt="review"></div>
+      <div class="ai-thinking-bar">
+        <div class="spinner"></div>
+        <div class="ai-thinking-text" id="thinking-text">Submitting evidence...</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="step-result" class="photo-step" style="display:none">
+    <div class="green-hdr" id="result-hdr">
+      <div class="hdr-title" id="result-hdr-title">Submitted for review</div>
+      <div class="hdr-sub" id="result-hdr-sub">An admin will approve or reject</div>
+    </div>
+    <div style="padding:18px">
+      <div class="result-card" id="result-card">
+        <div class="result-icon" id="result-icon">✅</div>
+        <div class="result-title" id="result-title">Proof received</div>
+        <div class="pts-earned" id="pts-earned">Awaiting approval</div>
+        <div class="result-desc" id="result-desc">You will earn points after admin approval</div>
+      </div>
+      <div class="photo-preview" style="display:flex;margin-bottom:14px"><img id="result-img" alt="submitted"></div>
+      <button class="verify-btn" id="result-back-btn" onclick="goNav('home')">Back to quests</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ QR ══════════════════════════════ -->
+<div class="screen" id="screen-qr">
+  <div class="green-hdr">
+    <div class="hdr-title">Your QR code</div>
+    <div class="hdr-sub">Show it to the organizer at the event</div>
+  </div>
+  <div style="padding:18px;display:flex;flex-direction:column;gap:14px">
+    <div class="qr-section">
+      <div style="font-size:12px;color:#8a8070;font-weight:700;margin-bottom:8px">Scanning at Bacvice beach cleanup</div>
+      <div class="qr-box">
+        <svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+          <rect width="150" height="150" fill="white"/>
+          <rect x="10" y="10" width="55" height="55" fill="none" stroke="#1a1a1a" stroke-width="4"/>
+          <rect x="20" y="20" width="35" height="35" fill="#1a1a1a"/>
+          <rect x="85" y="10" width="55" height="55" fill="none" stroke="#1a1a1a" stroke-width="4"/>
+          <rect x="95" y="20" width="35" height="35" fill="#1a1a1a"/>
+          <rect x="10" y="85" width="55" height="55" fill="none" stroke="#1a1a1a" stroke-width="4"/>
+          <rect x="20" y="95" width="35" height="35" fill="#1a1a1a"/>
+          <rect x="85" y="85" width="10" height="10" fill="#1a1a1a"/><rect x="100" y="85" width="10" height="10" fill="#1a1a1a"/>
+          <rect x="115" y="85" width="10" height="10" fill="#1a1a1a"/><rect x="130" y="85" width="10" height="10" fill="#1a1a1a"/>
+          <rect x="85" y="100" width="10" height="10" fill="#1a1a1a"/><rect x="115" y="100" width="10" height="10" fill="#1a1a1a"/>
+          <rect x="85" y="115" width="15" height="10" fill="#1a1a1a"/><rect x="105" y="115" width="10" height="10" fill="#1a1a1a"/>
+          <rect x="125" y="110" width="15" height="10" fill="#1a1a1a"/>
+          <rect x="85" y="130" width="10" height="10" fill="#1a1a1a"/><rect x="100" y="130" width="15" height="10" fill="#1a1a1a"/>
+          <rect x="120" y="125" width="10" height="15" fill="#1a1a1a"/><rect x="135" y="130" width="5" height="10" fill="#1a1a1a"/>
+        </svg>
+      </div>
+      <div class="qr-user">Marko Peric</div>
+      <div class="qr-id">ID: SPL-4471</div>
+    </div>
+    <div class="info-box">
+      <div class="info-title">How it works</div>
+      <div class="info-text">Event organizers use the Splitski admin app. They scan your QR when you arrive, you instantly earn 120 points, and your attendance is recorded.</div>
+    </div>
+    <button class="verify-btn" onclick="goNav('home')">Back to quests</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ REWARDS ══════════════════════════════ -->
+<div class="screen" id="screen-rewards">
+  <div class="red-hdr">
+    <div class="hdr-title">Rewards 🎁</div>
+    <div class="hdr-sub">Spend points at local businesses</div>
+    <div class="your-pts-pill">⭐ <span id="reward-pts">340</span> points available</div>
+  </div>
+  <div class="rewards-list">
+    <div class="rcard">
+      <div class="rtop"><div class="remoji">☕</div><div class="rinfo"><div class="rbiz">Konoba Fetivi</div><div class="rtitle">Free coffee + burek</div></div></div>
+      <div class="rfooter"><div class="rcost">⭐ 300 points</div><button class="raction" onclick="redeemReward(300)">Redeem</button></div>
+    </div>
+    <div class="rcard">
+      <div class="rtop"><div class="remoji">🫒</div><div class="rinfo"><div class="rbiz">Pazar market</div><div class="rtitle">10% off with vendors</div></div></div>
+      <div class="rfooter"><div class="rcost">⭐ 200 points</div><button class="raction" onclick="redeemReward(200)">Redeem</button></div>
+    </div>
+    <div class="rcard locked">
+      <div class="rtop"><div class="remoji">🏛️</div><div class="rinfo"><div class="rbiz">Museum of Croatian Archaeological Monuments</div><div class="rtitle">Free entry for two</div></div></div>
+      <div class="rfooter"><div class="rcost">⭐ 600 points</div><button class="raction locked-btn" id="museum-btn">🔒 260 to go</button></div>
+    </div>
+    <div class="rcard locked">
+      <div class="rtop"><div class="remoji">🍽️</div><div class="rinfo"><div class="rbiz">Varos Restaurant</div><div class="rtitle">Free lunch for two</div></div></div>
+      <div class="rfooter"><div class="rcost">⭐ 1000 points</div><button class="raction locked-btn" id="varos-btn">🔒 660 to go</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ LEADERBOARD ══════════════════════════════ -->
+<div class="screen" id="screen-lb">
+  <div class="blue-hdr">
+    <div class="hdr-title">Leaderboard 🏆</div>
+    <div class="hdr-sub">Manus neighborhood — this week</div>
+  </div>
+  <div class="lb-list">
+    <div class="lb-row"><div class="lb-rank gold">1</div><div class="lb-sheep-ic">👑🐑</div><div class="lb-info"><div class="lb-name">Ana Kovacevic</div><div class="lb-hood">Manus</div></div><div class="lb-pts">892</div></div>
+    <div class="lb-row"><div class="lb-rank silver">2</div><div class="lb-sheep-ic">✨🐑</div><div class="lb-info"><div class="lb-name">Ivan Juric</div><div class="lb-hood">Manus</div></div><div class="lb-pts">711</div></div>
+    <div class="lb-row"><div class="lb-rank bronze">3</div><div class="lb-sheep-ic">🌸🐑</div><div class="lb-info"><div class="lb-name">Petra Blazevic</div><div class="lb-hood">Manus</div></div><div class="lb-pts">580</div></div>
+    <div class="lb-row me"><div class="lb-rank" style="color:#2d5a27">4</div><div class="lb-sheep-ic">🌸🐑</div><div class="lb-info"><div class="lb-name" style="color:#2d5a27">Marko Peric (you)</div><div class="lb-hood">Manus</div></div><div class="lb-pts" id="lb-pts">340</div></div>
+    <div class="lb-row"><div class="lb-rank">5</div><div class="lb-sheep-ic">🐑</div><div class="lb-info"><div class="lb-name">Tomislav Grgic</div><div class="lb-hood">Manus</div></div><div class="lb-pts">210</div></div>
+    <div class="lb-row"><div class="lb-rank">6</div><div class="lb-sheep-ic">🐑</div><div class="lb-info"><div class="lb-name">Maja Simic</div><div class="lb-hood">Manus</div></div><div class="lb-pts">145</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ ORGANIZER ══════════════════════════════ -->
+<div class="screen" id="screen-org">
+  <div class="green-hdr">
+    <div class="hdr-title">Admin panel</div>
+    <div class="hdr-sub">Review proofs and scan event attendees</div>
+  </div>
+  <div class="org-section">
+    <div class="org-card">
+      <div class="org-event">Proof reviews</div>
+      <div class="org-meta">Approve or reject user submissions. Points are granted on approval.</div>
+      <div class="attendee-list" id="review-list">
+        <div class="att-row"><div><div class="att-name">No submissions yet</div><div class="att-time">Waiting for users</div></div><div class="att-pts">—</div></div>
+      </div>
+    </div>
+    <div class="org-card">
+      <div class="org-event">Bacvice beach cleanup</div>
+      <div class="org-meta">Today, 09:00 — 120 points per attendee</div>
+      <button class="scan-btn" onclick="simulateScan()">📲 Scan QR code</button>
+      <div class="attendee-list" id="att-list">
+        <div class="att-row"><div><div class="att-name">Ana Kovacevic</div><div class="att-time">09:04</div></div><div class="att-pts">+120</div></div>
+        <div class="att-row"><div><div class="att-name">Ivan Juric</div><div class="att-time">09:11</div></div><div class="att-pts">+120</div></div>
+      </div>
+    </div>
+    <div class="count-card">
+      <div class="count-num" id="scan-count">2</div>
+      <div class="count-lbl">Attendees scanned</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════ NAV ══════════════════════════════ -->
+<div class="bottom-nav">
+  <div class="nav-item active" id="nav-home" onclick="goNav('home')"><div class="nav-icon">🏠</div><span>Home</span></div>
+  <div class="nav-item" id="nav-sheep" onclick="goNav('sheep')"><div class="nav-icon">🐑</div><span>Splitka</span></div>
+  <div class="nav-item" id="nav-qr" onclick="goNav('qr')"><div class="nav-icon">📲</div><span>My QR</span></div>
+  <div class="nav-item" id="nav-rewards" onclick="goNav('rewards')"><div class="nav-icon">🎁</div><span>Rewards</span></div>
+  <div class="nav-item" id="nav-lb" onclick="goNav('lb')"><div class="nav-icon">🏆</div><span>Ranks</span></div>
+  <div class="nav-item" id="nav-org" onclick="goNav('org')"><div class="nav-icon">🎫</div><span>Admin</span></div>
+</div>
+</div>
+
+<script>
+let pts = 340;
+let questsDone = 12;
+let currentQuest = {};
+let uploadedB64 = null;
+let scanCount = 2;
+let userLoggedIn = false;
+let adminLoggedIn = false;
+const scanNames = ['Petra Blazevic','Tomislav Grgic','Maja Simic','Luka Horvat','Sara Vukovic','Nikola Baric'];
+const pendingReviews = [];
+
+function goNav(name) {
+  const wrap = document.querySelector('.phone-wrap');
+  const hideNav = name === 'auth' || name === 'admin-login';
+  if(hideNav) wrap.classList.add('nav-hidden');
+  else wrap.classList.remove('nav-hidden');
+
+  if(name === 'org' && !adminLoggedIn) name = 'admin-login';
+  if(name !== 'auth' && name !== 'admin-login' && !userLoggedIn && !adminLoggedIn) name = 'auth';
+
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  const ni = document.getElementById('nav-' + name);
+  if(ni) ni.classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function showAuthTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  document.getElementById('auth-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('auth-register').style.display = tab === 'register' ? 'block' : 'none';
+}
+
+function setUserName(name) {
+  const safeName = name && name.trim() ? name.trim() : 'Marko Peric';
+  document.querySelector('.user-name').textContent = safeName;
+  document.querySelector('.qr-user').textContent = safeName;
+}
+
+function handleUserLogin() {
+  userLoggedIn = true;
+  adminLoggedIn = false;
+  showToast('Welcome back!');
+  goNav('home');
+}
+
+function handleUserRegister() {
+  const name = document.getElementById('reg-name').value;
+  setUserName(name);
+  userLoggedIn = true;
+  adminLoggedIn = false;
+  showToast('Account created. Welcome!');
+  goNav('home');
+}
+
+function handleAdminLogin() {
+  adminLoggedIn = true;
+  userLoggedIn = false;
+  showToast('Admin access granted');
+  goNav('org');
+}
+
+function bounceSheep() {
+  const w = document.getElementById('sheep-wrap');
+  w.classList.remove('bouncing');
+  void w.offsetWidth;
+  w.classList.add('bouncing');
+  setTimeout(() => w.classList.remove('bouncing'), 500);
+}
+
+function updatePts(add) {
+  pts += add;
+  questsDone++;
+  document.getElementById('home-pts').textContent = '⭐ ' + pts + ' points';
+  document.getElementById('sheep-pts').textContent = pts;
+  document.getElementById('sheep-quests').textContent = questsDone;
+  document.getElementById('reward-pts').textContent = pts;
+  document.getElementById('lb-pts').textContent = pts;
+  document.getElementById('prog-lbl').textContent = pts + ' / 600 points → next reward';
+  const pct = Math.min(100, Math.round((pts / 600) * 100));
+  document.getElementById('prog-fill').style.width = pct + '%';
+  updateRewardBtns();
+  bounceSheep();
+}
+
+function updateRewardBtns() {
+  const mb = document.getElementById('museum-btn');
+  const vb = document.getElementById('varos-btn');
+  if(pts >= 600) { mb.textContent = 'Redeem'; mb.className = 'raction'; mb.onclick = () => redeemReward(600); }
+  else mb.textContent = '🔒 ' + (600 - pts) + ' to go';
+  if(pts >= 1000) { vb.textContent = 'Redeem'; vb.className = 'raction'; vb.onclick = () => redeemReward(1000); }
+  else vb.textContent = '🔒 ' + (1000 - pts) + ' to go';
+}
+
+function redeemReward(cost) {
+  if(pts < cost) { showToast('Not enough points yet! 💪'); return; }
+  pts -= cost;
+  document.getElementById('home-pts').textContent = '⭐ ' + pts + ' points';
+  document.getElementById('reward-pts').textContent = pts;
+  document.getElementById('lb-pts').textContent = pts;
+  document.getElementById('sheep-pts').textContent = pts;
+  updateRewardBtns();
+  showToast('🎉 Reward redeemed! Show it at the venue.');
+}
+
+function filterCat(cat, el) {
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.qcard').forEach(c => {
+    c.style.display = (cat === 'all' || c.dataset.cat === cat) ? 'flex' : 'none';
+  });
+}
+
+function openPhoto(qid, title, p) {
+  const card = document.getElementById(qid);
+  if(card && card.classList.contains('done')) return;
+  currentQuest = {qid, title, pts: p};
+  document.getElementById('photo-title').textContent = title;
+  document.getElementById('step-upload').style.display = 'block';
+  document.getElementById('step-thinking').style.display = 'none';
+  document.getElementById('step-result').style.display = 'none';
+  document.getElementById('photo-preview').style.display = 'none';
+  document.getElementById('upload-zone').style.display = 'block';
+  document.getElementById('verify-btn').disabled = true;
+  uploadedB64 = null;
+  document.getElementById('file-input').value = '';
+  goNav('photo');
+}
+
+function handleFile(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const dataUrl = ev.target.result;
+    uploadedB64 = dataUrl.split(',')[1];
+    document.getElementById('preview-img').src = dataUrl;
+    document.getElementById('photo-preview').style.display = 'flex';
+    document.getElementById('upload-zone').style.display = 'none';
+    document.getElementById('verify-btn').disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+function startVerification() {
+  if(!uploadedB64) return;
+  document.getElementById('step-upload').style.display = 'none';
+  document.getElementById('step-thinking').style.display = 'block';
+  document.getElementById('thinking-img').src = document.getElementById('preview-img').src;
+  const msgs = ['Submitting evidence...','Queued for admin review...','Almost done...'];
+  let ti = 0;
+  const iv = setInterval(() => {
+    ti = (ti + 1) % msgs.length;
+    document.getElementById('thinking-text').textContent = msgs[ti];
+  }, 900);
+
+  setTimeout(() => {
+    clearInterval(iv);
+    queueReview();
+    showSubmissionResult();
+  }, 1200);
+}
+
+function queueReview() {
+  const userName = document.querySelector('.user-name').textContent || 'User';
+  const review = {
+    id: Date.now(),
+    qid: currentQuest.qid,
+    title: currentQuest.title,
+    pts: currentQuest.pts,
+    user: userName,
+    time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}),
+    img: document.getElementById('preview-img').src
+  };
+  pendingReviews.unshift(review);
+  renderReviewList();
+}
+
+function showSubmissionResult() {
+  document.getElementById('step-thinking').style.display = 'none';
+  document.getElementById('step-result').style.display = 'block';
+  document.getElementById('result-img').src = document.getElementById('preview-img').src;
+  document.getElementById('result-card').className = 'result-card success';
+  document.getElementById('result-icon').textContent = '🕒';
+  document.getElementById('result-title').textContent = 'Submitted for review';
+  document.getElementById('pts-earned').textContent = 'Pending approval';
+  document.getElementById('pts-earned').style.color = '#2d5a27';
+  document.getElementById('result-desc').textContent = 'Admins will review your proof soon.';
+  document.getElementById('result-hdr-title').textContent = 'Submitted for review';
+  document.getElementById('result-hdr-sub').textContent = 'Waiting for admin decision';
+  document.getElementById('result-back-btn').textContent = 'Back to quests';
+  document.getElementById('result-back-btn').onclick = () => goNav('home');
+  showToast('Submitted for admin review');
+}
+
+function markQuestDone(qid) {
+  const card = document.getElementById(qid);
+  if(card) {
+    card.classList.add('done');
+    const btn = card.querySelector('.qbtn');
+    if(btn) { btn.textContent = '✓ Done'; btn.className = 'qbtn done-btn'; }
+  }
+}
+
+function renderReviewList() {
+  const list = document.getElementById('review-list');
+  if(!list) return;
+  list.innerHTML = '';
+  if(!pendingReviews.length) {
+    list.innerHTML = '<div class="att-row"><div><div class="att-name">No submissions yet</div><div class="att-time">Waiting for users</div></div><div class="att-pts">—</div></div>';
+    return;
+  }
+
+  pendingReviews.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'att-row';
+    row.innerHTML = `
+      <div>
+        <div class="att-name">${r.title}</div>
+        <div class="att-time">${r.user} • ${r.time}</div>
+      </div>
+      <div class="review-actions">
+        <div class="att-pts">+${r.pts}</div>
+        <button class="review-btn approve">Approve</button>
+        <button class="review-btn deny">Reject</button>
+      </div>`;
+    row.querySelector('.review-btn.approve').addEventListener('click', () => approveReview(r.id));
+    row.querySelector('.review-btn.deny').addEventListener('click', () => rejectReview(r.id));
+    list.appendChild(row);
+  });
+}
+
+function approveReview(id) {
+  const idx = pendingReviews.findIndex(r => r.id === id);
+  if(idx === -1) return;
+  const review = pendingReviews[idx];
+  const card = document.getElementById(review.qid);
+  if(!card || !card.classList.contains('done')) {
+    updatePts(review.pts);
+    markQuestDone(review.qid);
+  }
+  pendingReviews.splice(idx, 1);
+  renderReviewList();
+  showToast('Approved: +' + review.pts + ' points');
+}
+
+function rejectReview(id) {
+  const idx = pendingReviews.findIndex(r => r.id === id);
+  if(idx === -1) return;
+  pendingReviews.splice(idx, 1);
+  renderReviewList();
+  showToast('Rejected submission');
+}
+
+function simulateScan() {
+  const name = scanNames[scanCount % scanNames.length];
+  const now = new Date();
+  const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  const list = document.getElementById('att-list');
+  const row = document.createElement('div');
+  row.className = 'att-row';
+  row.innerHTML = '<div><div class="att-name">'+name+'</div><div class="att-time">'+time+'</div></div><div class="att-pts">+120</div>';
+  list.appendChild(row);
+  scanCount++;
+  document.getElementById('scan-count').textContent = scanCount;
+  showToast('Scanned! ' + name + ' earns 120 points');
+}
+
+goNav('auth');
+</script>
+</body>
+</html>
