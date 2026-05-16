@@ -44,12 +44,13 @@ export function HomeView({
 
   const pendingIds = new Set(myRequests.filter((r) => r.status === 'pending').map((r) => r.quest_id));
   const doneIds = new Set(myRequests.filter((r) => r.status === 'approved').map((r) => r.quest_id));
-  const progress = Math.min(100, Math.round(profile.points / 6));
+  const earned = profile.total_earned ?? profile.points;
+  const progress = Math.min(100, Math.round(earned / 6));
   const level =
-    profile.points < 100 ? 'Splitski Newbie'
-    : profile.points < 300 ? 'Splitski Regular'
-    : profile.points < 600 ? 'Splitski Hero'
-    : profile.points < 1000 ? 'Splitski Star'
+    earned < 100 ? 'Splitski Newbie'
+    : earned < 300 ? 'Splitski Regular'
+    : earned < 600 ? 'Splitski Hero'
+    : earned < 1000 ? 'Splitski Star'
     : 'Legend of Split';
 
   return (
@@ -89,7 +90,7 @@ export function HomeView({
             <div className="h-1.5 rounded-full bg-brand-green transition-all" style={{ width: `${progress}%` }} />
           </div>
           <div className="text-[10px] text-brand-muted font-bold mt-0.5">
-            {profile.points} / 600 → next reward
+            {earned} / 600 lifetime points → next level
           </div>
         </div>
       </div>
@@ -108,7 +109,7 @@ export function HomeView({
           let btn;
           if (isDone) btn = <button className="bg-brand-beige-dark text-brand-muted text-[10px] font-extrabold px-2.5 py-1 rounded-full">✓ Done</button>;
           else if (isPending) btn = <button className="bg-[#ffc875] text-[#7a4d0c] text-[10px] font-extrabold px-2.5 py-1 rounded-full">Pending</button>;
-          else if (q.proof_type === 'qr') btn = <button onClick={() => router.push('/qr')} className="bg-brand-green text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full">My QR</button>;
+          else if (q.proof_type === 'qr') btn = <button onClick={() => router.push(`/quest/${q.id}`)} className="bg-brand-green text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full">Show QR</button>;
           else btn = <button onClick={() => router.push(`/quest/${q.id}`)} className="bg-brand-green text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full">Prove</button>;
 
           return (

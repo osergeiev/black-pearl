@@ -178,6 +178,44 @@ end;
 $$ language plpgsql security definer;
 
 -- ============================================
+-- AWARD QR QUEST (admin scans user, awards points immediately)
+-- ============================================
+create or replace function award_qr_quest(p_user_id uuid, p_quest_id uuid)
+returns void as $$
+declare
+  v_pts int;
+  v_proof text;
+begin
+  if not exists (select 1 from profiles where id = auth.uid() and role = 'admin') then
+    raise exception 'Admin only';
+  end if;
+
+  select points, proof_type into v_pts, v_proof from quests where id = p_quest_id and active = true;
+  if v_pts is null then raise exception 'Quest not found or inactive'; end if;
+  if v_proof <> 'qr' then raise exception 'Quest is not a QR quest'; end if;
+
+  if not exists (select 1 from profiles where id = p_user_id) then
+    raise exception 'User not found';
+  end if;
+
+  if exists (
+    select 1 from requests
+    where user_id = p_user_id and quest_id = p_quest_id and status = 'approved'
+  ) then
+    raise exception 'User already received this quest';
+  end if;
+
+  insert into requests (user_id, quest_id, status, reviewed_at, reviewed_by)
+    values (p_user_id, p_quest_id, 'approved', now(), auth.uid());
+
+  update profiles set
+    points = points + v_pts,
+    total_earned = total_earned + v_pts
+  where id = p_user_id;
+end;
+$$ language plpgsql security definer;
+
+-- ============================================
 -- REDEEM REWARD (atomic: checks balance, deducts, logs)
 -- ============================================
 create or replace function redeem_reward(p_reward_id uuid)

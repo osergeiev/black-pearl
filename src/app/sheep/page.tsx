@@ -13,13 +13,19 @@ export const dynamic = 'force-dynamic';
 export default async function SheepPage() {
   const { profile } = await requireUser();
   const supabase = await createClient();
-  const { count: questsDone } = await supabase
-    .from('requests')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', profile.id)
-    .eq('status', 'approved');
+  const [{ count: questsDone }, { count: rewardsEarned }] = await Promise.all([
+    supabase
+      .from('requests')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', profile.id)
+      .eq('status', 'approved'),
+    supabase
+      .from('redemptions')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', profile.id)
+  ]);
 
-  const pts = profile.points;
+  const pts = profile.total_earned ?? profile.points;
   const current = pts < 100 ? 0 : pts < 300 ? 1 : pts < 600 ? 2 : pts < 1000 ? 3 : 4;
   const levels = [
     { name: 'Starving', range: '0–99 points', Icon: IconMoodSad },
@@ -27,6 +33,13 @@ export default async function SheepPage() {
     { name: 'Happy', range: '300–599 points', Icon: IconMoodHappy },
     { name: 'Thriving', range: '600–999 points', Icon: IconSparkles },
     { name: 'Legend of Split', range: '1000+ points', Icon: IconCrown }
+  ];
+  const moods = [
+    'Hungry — feed me with quests!',
+    'Doing okay — keep going!',
+    'Happy & full of energy',
+    'Thriving — Split is proud',
+    'Legend status — the city loves you'
   ];
 
   return (
@@ -36,14 +49,14 @@ export default async function SheepPage() {
         <div className="bg-brand-green px-[18px] pt-1 pb-6 flex flex-col items-center text-white flex-shrink-0 -mt-3">
           <SheepSvg size={160} />
           <div className="text-[22px] font-black mt-2">Splitka</div>
-          <div className="text-xs opacity-85 font-bold mt-0.5">Happy &amp; thriving — keep going!</div>
+          <div className="text-xs opacity-85 font-bold mt-0.5">{moods[current]}</div>
         </div>
 
         <div className="grid grid-cols-2 gap-2.5 px-3.5 py-3.5">
-          <Stat num={pts} label="Total points" />
-          <Stat num={5} label="Day streak" icon={<IconFlame size={11} className="text-[#ffb347]" />} />
+          <Stat num={profile.total_earned ?? profile.points} label="Total earned" />
+          <Stat num={profile.streak ?? 0} label="Day streak" icon={<IconFlame size={11} className="text-[#ffb347]" />} />
           <Stat num={questsDone ?? 0} label="Quests done" />
-          <Stat num={0} label="Rewards earned" />
+          <Stat num={rewardsEarned ?? 0} label="Rewards earned" />
         </div>
 
         <div className="px-3.5 pb-1.5 flex items-center justify-between">

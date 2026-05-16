@@ -2,13 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { IconHome, IconPaw, IconHistory, IconQrcode, IconGift, IconTrophy } from '@tabler/icons-react';
+import { IconHome, IconPaw, IconHistory, IconGift, IconTrophy } from '@tabler/icons-react';
 
 const items = [
   { href: '/home', label: 'Home', icon: IconHome },
   { href: '/sheep', label: 'Sheep', icon: IconPaw },
   { href: '/myrequests', label: 'My', icon: IconHistory },
-  { href: '/qr', label: 'QR', icon: IconQrcode },
   { href: '/rewards', label: 'Rewards', icon: IconGift },
   { href: '/leaderboard', label: 'Rank', icon: IconTrophy }
 ];
