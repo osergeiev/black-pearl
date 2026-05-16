@@ -62,16 +62,16 @@ export function AdminQuestsView({ quests: initial }: { quests: Quest[] }) {
               <div className="text-xs font-extrabold text-[#1a1a1a] mb-px leading-tight">{q.title}</div>
               <div className="text-[10px] text-brand-muted font-semibold leading-tight">{q.description}</div>
               <span className={`inline-flex items-center gap-1 text-[9px] font-extrabold px-1.5 py-0.5 rounded-md mt-1 ${
-                q.proof_type === 'qr' ? 'bg-[#e8f5e8] text-brand-green' : 'bg-[#e8f4ff] text-[#185FA5]'
+                q.proof_type === 'qr' ? 'bg-brand-teal-bg text-brand-teal' : 'bg-[#EAF2FF] text-brand-blue'
               }`}>
                 {q.proof_type === 'qr' ? <><IconQrcode size={11} />QR scan</> : <><IconCamera size={11} />Photo + admin</>}
               </span>
             </div>
             <div className="flex flex-col items-end gap-1 flex-shrink-0">
-              <div className="text-xs font-black text-brand-green flex items-center gap-0.5">
-                <IconStarFilled size={11} className="text-[#d4a017]" />+{q.points}
+              <div className="text-xs font-black text-brand-amber flex items-center gap-0.5">
+                <IconStarFilled size={11} className="text-brand-amber" />+{q.points}
               </div>
-              <button onClick={() => del(q.id)} className="bg-[#a83232] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1">
+              <button onClick={() => del(q.id)} className="bg-brand-coral text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1">
                 <IconTrash size={11} />
               </button>
             </div>

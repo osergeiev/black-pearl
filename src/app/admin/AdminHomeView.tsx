@@ -81,7 +81,7 @@ export function AdminHomeView({
       <div className="px-3.5 pb-3 flex flex-col gap-2.5">
         {items.length === 0 ? (
           <div className="text-center py-10 text-brand-muted font-bold text-sm leading-relaxed">
-            <IconChecks size={40} className="text-[#c8e6c9] mx-auto mb-2.5" />
+            <IconChecks size={40} className="text-brand-teal mx-auto mb-2.5" />
             All clear!<br />No pending requests right now.
           </div>
         ) : (
@@ -99,18 +99,18 @@ export function AdminHomeView({
                       {pr.quest.title} • {new Date(pr.submitted_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
-                  <div className="text-sm font-black text-brand-green flex items-center gap-0.5 flex-shrink-0">
-                    <IconStarFilled size={12} className="text-[#d4a017]" />+{pr.quest.points}
+                  <div className="text-sm font-black text-brand-amber flex items-center gap-0.5 flex-shrink-0">
+                    <IconStarFilled size={12} className="text-brand-amber" />+{pr.quest.points}
                   </div>
                 </div>
                 <div className="w-full rounded-[10px] h-[140px] bg-brand-beige-dark overflow-hidden mb-2.5 flex items-center justify-center">
                   {pr.photo_url ? <img src={pr.photo_url} alt="proof" className="w-full h-full object-cover" /> : <IconPhoto size={34} className="text-[#b0a898]" />}
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => reject(pr.id)} disabled={busy === pr.id} className="flex-1 bg-[#faebec] border-[1.5px] border-[#e2afaf] text-[#a83232] text-xs font-extrabold py-2.5 rounded-[10px] flex items-center justify-center gap-1.5">
+                  <button onClick={() => reject(pr.id)} disabled={busy === pr.id} className="flex-1 bg-brand-coral-bg border-[1.5px] border-[#FFC1C1] text-brand-coral text-xs font-extrabold py-2.5 rounded-[10px] flex items-center justify-center gap-1.5">
                     <IconX size={14} />Reject
                   </button>
-                  <button onClick={() => approve(pr.id)} disabled={busy === pr.id} className="flex-1 bg-brand-green text-white text-xs font-extrabold py-2.5 rounded-[10px] flex items-center justify-center gap-1.5">
+                  <button onClick={() => approve(pr.id)} disabled={busy === pr.id} className="flex-1 bg-brand-teal text-white text-xs font-extrabold py-2.5 rounded-[10px] flex items-center justify-center gap-1.5">
                     <IconCheck size={14} />Approve
                   </button>
                 </div>

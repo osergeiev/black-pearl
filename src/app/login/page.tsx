@@ -89,7 +89,7 @@ export default function LoginPage() {
         />
 
         {error && (
-          <div className="text-[#a83232] text-xs font-bold mb-2 text-center bg-[#faebec] p-2 rounded-lg">
+          <div className="text-brand-coral text-xs font-bold mb-2 text-center bg-brand-coral-bg p-2 rounded-lg">
             {error}
           </div>
         )}

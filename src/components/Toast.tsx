@@ -8,7 +8,7 @@ const Ctx = createContext<{ show: (msg: string, color?: string) => void }>({ sho
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toast, setToast] = useState<Toast | null>(null);
 
-  const show = useCallback((msg: string, color = '#2d5a27') => {
+  const show = useCallback((msg: string, color = '#5C7CFF') => {
     setToast({ msg, color });
     setTimeout(() => setToast(null), 2800);
   }, []);

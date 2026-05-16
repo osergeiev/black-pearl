@@ -131,8 +131,8 @@ export function HomeView({
                 <span
                   className={`inline-flex items-center gap-1 text-[9px] font-extrabold px-1.5 py-0.5 rounded-md mt-1 ${
                     isPending ? 'bg-[#fff3e0] text-[#a85e0c]'
-                    : q.proof_type === 'qr' ? 'bg-[#e8f5e8] text-brand-green'
-                    : 'bg-[#e8f4ff] text-[#185FA5]'
+                    : q.proof_type === 'qr' ? 'bg-brand-teal-bg text-brand-teal'
+                    : 'bg-[#EAF2FF] text-brand-blue'
                   }`}
                 >
                   {isPending ? <><IconClock size={11} />Pending</> :
@@ -141,8 +141,8 @@ export function HomeView({
                 </span>
               </div>
               <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                <div className="text-xs font-black text-brand-green flex items-center gap-0.5">
-                  <IconStarFilled size={11} className="text-[#d4a017]" />+{q.points}
+                <div className="text-xs font-black text-brand-amber flex items-center gap-0.5">
+                  <IconStarFilled size={11} className="text-brand-amber" />+{q.points}
                 </div>
                 {btn}
               </div>
