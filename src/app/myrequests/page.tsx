@@ -19,7 +19,7 @@ export default async function MyRequestsPage() {
   return (
     <>
       <div className="flex-1 min-h-0 overflow-y-auto flex flex-col">
-        <Header title="My requests" subtitle="All your quest submissions" icon={<IconHistory size={22} />} color="blue" />
+        <Header title="My requests" subtitle="All your quest submissions" icon={<IconHistory size={22} />} color="green" />
         {(!requests || requests.length === 0) ? (
           <div className="text-center py-10 px-5 text-brand-muted font-bold text-sm leading-relaxed">
             <IconInbox size={40} className="text-brand-blue mx-auto mb-2.5" />
