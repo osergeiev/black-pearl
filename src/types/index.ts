@@ -1,0 +1,53 @@
+export type Profile = {
+  id: string;
+  name: string;
+  neighborhood: string | null;
+  points: number;
+  total_earned: number;
+  streak: number;
+  last_submission_date: string | null;
+  role: 'user' | 'admin';
+  created_at: string;
+};
+
+export type Quest = {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  image_url: string | null;
+  points: number;
+  proof_type: 'photo' | 'qr';
+  qr_method: 'auto' | 'event' | 'organizer' | null;
+  qr_data: string | null;
+  active: boolean;
+  created_at: string;
+};
+
+export type Request = {
+  id: string;
+  user_id: string;
+  quest_id: string;
+  status: 'pending' | 'approved' | 'rejected';
+  photo_url: string | null;
+  submitted_at: string;
+  reviewed_at: string | null;
+  reviewed_by: string | null;
+};
+
+export type RequestWithDetails = Request & {
+  quest: Quest;
+  profile: Profile;
+};
+
+export type Reward = {
+  id: string;
+  business: string;
+  title: string;
+  description: string | null;
+  icon: string;
+  image_url: string | null;
+  cost: number;
+  active: boolean;
+  created_at: string;
+};
