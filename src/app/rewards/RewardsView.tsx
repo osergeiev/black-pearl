@@ -4,9 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { IconGift, IconStarFilled, IconLock, IconLogout } from '@tabler/icons-react';
 import { createClient } from '@/lib/supabase-client';
-import type { Profile } from '@/types';
-
-type Reward = { biz: string; title: string; icon: string; image_url?: string; cost: number };
+import type { Profile, Reward } from '@/types';
 
 export function RewardsView({ profile, rewards }: { profile: Profile; rewards: Reward[] }) {
   const router = useRouter();
@@ -16,13 +14,12 @@ export function RewardsView({ profile, rewards }: { profile: Profile; rewards: R
 
   async function redeem(r: Reward) {
     if (pts < r.cost) return;
-    setRedeeming(r.title);
-    const newPts = pts - r.cost;
-    const { error } = await supabase.from('profiles').update({ points: newPts }).eq('id', profile.id);
+    setRedeeming(r.id);
+    const { error } = await supabase.rpc('redeem_reward', { p_reward_id: r.id });
     setRedeeming(null);
     if (error) { alert(error.message); return; }
-    setPts(newPts);
-    alert(`Reward redeemed! Show this at ${r.biz}.`);
+    setPts(pts - r.cost);
+    alert(`Reward redeemed! Show this at ${r.business}.`);
     router.refresh();
   }
 
@@ -45,18 +42,26 @@ export function RewardsView({ profile, rewards }: { profile: Profile; rewards: R
         </div>
       </div>
       <div className="p-3.5 flex flex-col gap-2.5">
+        {rewards.length === 0 && (
+          <div className="text-center py-10 text-brand-muted font-bold text-sm">
+            No rewards yet. Check back soon!
+          </div>
+        )}
         {rewards.map((r) => {
           const locked = pts < r.cost;
           return (
-            <div key={r.title} className={`bg-white rounded-[13px] p-3.5 border-[1.5px] border-brand-beige ${locked ? 'opacity-55' : ''}`}>
+            <div key={r.id} className={`bg-white rounded-[13px] p-3.5 border-[1.5px] border-brand-beige ${locked ? 'opacity-55' : ''}`}>
               {r.image_url && (
                 <div className="w-full h-28 rounded-[11px] overflow-hidden mb-2.5">
                   <img src={r.image_url} alt={r.title} className="w-full h-full object-cover" />
                 </div>
               )}
               <div className="mb-2">
-                <div className="text-[10px] font-extrabold text-brand-muted uppercase tracking-wide">{r.biz}</div>
+                <div className="text-[10px] font-extrabold text-brand-muted uppercase tracking-wide">{r.business}</div>
                 <div className="text-[13px] font-extrabold text-[#1a1a1a]">{r.title}</div>
+                {r.description && (
+                  <div className="text-[10px] text-brand-muted font-semibold mt-0.5">{r.description}</div>
+                )}
               </div>
               <div className="flex items-center justify-between">
                 <div className="text-xs font-black text-brand-amber flex items-center gap-0.5">
@@ -67,8 +72,8 @@ export function RewardsView({ profile, rewards }: { profile: Profile; rewards: R
                     <IconLock size={11} />{r.cost - pts} more
                   </button>
                 ) : (
-                  <button onClick={() => redeem(r)} disabled={redeeming === r.title} className="bg-brand-coral text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full">
-                    {redeeming === r.title ? 'Redeeming...' : 'Redeem'}
+                  <button onClick={() => redeem(r)} disabled={redeeming === r.id} className="bg-brand-coral text-white text-[11px] font-extrabold px-3.5 py-1.5 rounded-full">
+                    {redeeming === r.id ? 'Redeeming...' : 'Redeem'}
                   </button>
                 )}
               </div>

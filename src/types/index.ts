@@ -39,3 +39,15 @@ export type RequestWithDetails = Request & {
   quest: Quest;
   profile: Profile;
 };
+
+export type Reward = {
+  id: string;
+  business: string;
+  title: string;
+  description: string | null;
+  icon: string;
+  image_url: string | null;
+  cost: number;
+  active: boolean;
+  created_at: string;
+};
