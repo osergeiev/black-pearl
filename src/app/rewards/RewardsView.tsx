@@ -51,7 +51,7 @@ export function RewardsView({ profile, rewards }: { profile: Profile; rewards: R
             <div key={r.title} className={`bg-white rounded-[13px] p-3.5 border-[1.5px] border-brand-beige ${locked ? 'opacity-55' : ''}`}>
               <div className="flex items-center gap-2.5 mb-2">
                 <div className="w-11 h-11 rounded-[11px] bg-brand-coral-bg flex items-center justify-center flex-shrink-0">
-                  <i className={`ti ${r.icon}`} style={{ fontSize: 24, color: '#FF6B6B' }} />
+                  <i className={`ti ${r.icon}`} style={{ fontSize: 24, color: '#E86F5C' }} />
                 </div>
                 <div className="flex-1">
                   <div className="text-[10px] font-extrabold text-brand-muted uppercase tracking-wide">{r.biz}</div>

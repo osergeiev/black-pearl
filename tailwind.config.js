@@ -4,21 +4,21 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Nunito', 'system-ui', 'sans-serif']
+        sans: ['"Josefin Sans"', 'system-ui', 'sans-serif']
       },
       colors: {
         brand: {
-          green: '#5C7CFF',
-          'green-light': '#8EA2FF',
-          'green-bg': '#EEF2FF',
-          teal: '#21A6A1',
-          'teal-bg': '#E8FAF8',
-          coral: '#FF6B6B',
-          'coral-bg': '#FFF0EE',
-          amber: '#F4B740',
-          purple: '#7C5CFF',
-          red: '#FF6B6B',
-          blue: '#2F80ED',
+          green: '#00626F',
+          'green-light': '#0E7F8F',
+          'green-bg': '#E6F3F4',
+          teal: '#008E9B',
+          'teal-bg': '#E7F8F9',
+          coral: '#E86F5C',
+          'coral-bg': '#FFF1EE',
+          amber: '#E6A83A',
+          purple: '#36536B',
+          red: '#E86F5C',
+          blue: '#147A8A',
           cream: '#faf8f4',
           beige: '#f0ebe3',
           'beige-dark': '#e8e2d8',

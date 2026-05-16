@@ -102,7 +102,7 @@ export function ProofForm({ quest }: { quest: Quest }) {
         {!preview ? (
           <div
             onClick={() => inputRef.current?.click()}
-            className="border-2 border-dashed border-[#B8EDE8] rounded-[13px] py-6 px-3.5 text-center cursor-pointer bg-brand-teal-bg mb-3"
+            className="border-2 border-dashed border-[#B5E2E4] rounded-[13px] py-6 px-3.5 text-center cursor-pointer bg-brand-teal-bg mb-3"
           >
             <IconCamera size={38} className="text-brand-teal mx-auto mb-1.5" />
             <div className="text-[13px] font-extrabold text-brand-teal">Take or upload a photo</div>

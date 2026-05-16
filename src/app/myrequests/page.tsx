@@ -33,7 +33,7 @@ export default async function MyRequestsPage() {
                 <div key={r.id} className="bg-white rounded-[13px] p-3 border-[1.5px] border-brand-beige">
                   <div className="flex items-center gap-2.5">
 
-                    <div className="w-12 h-12 rounded-[10px] bg-[#e8f5e8] text-brand-green flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <div className="w-12 h-12 rounded-[10px] bg-brand-green-bg text-brand-green flex items-center justify-center flex-shrink-0 overflow-hidden">
                       {r.quest?.image_url ? (
                         <img src={r.quest.image_url} alt={r.quest.title} className="w-full h-full object-cover" />
                       ) : (

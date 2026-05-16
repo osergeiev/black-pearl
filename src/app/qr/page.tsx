@@ -22,7 +22,7 @@ export default async function QrPage() {
             <div className="text-[13px] font-black text-[#1a1a1a] mt-2">{profile.name}</div>
             <div className="text-[11px] text-brand-muted font-bold font-mono mt-0.5">ID: {profile.id.slice(0, 8)}</div>
           </div>
-          <div className="bg-brand-teal-bg rounded-[12px] p-3.5 border-[1.5px] border-[#B8EDE8] w-full">
+          <div className="bg-brand-teal-bg rounded-[12px] p-3.5 border-[1.5px] border-[#B5E2E4] w-full">
             <div className="text-xs font-extrabold text-brand-teal mb-1 flex items-center gap-1.5">
               <IconInfoCircle size={13} />How it works
             </div>
