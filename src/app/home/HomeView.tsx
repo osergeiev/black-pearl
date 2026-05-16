@@ -70,7 +70,7 @@ export function HomeView({
           </div>
           <div className="bg-white/15 rounded-full px-2.5 py-1 text-[11px] font-bold">{level}</div>
           <div className="ml-auto bg-white/15 rounded-full px-2 py-1 text-[11px] font-bold flex items-center gap-1">
-            <IconFlame size={12} className="text-[#ffb347]" />5 days
+            <IconFlame size={12} className="text-[#ffb347]" />{profile.streak} {profile.streak === 1 ? 'day' : 'days'}
           </div>
         </div>
       </div>
@@ -118,8 +118,12 @@ export function HomeView({
                 isDone ? 'opacity-45 border-brand-beige' : isPending ? 'border-[#ffc875] bg-[#fffaf0]' : 'border-brand-beige'
               }`}
             >
-              <div className="w-[42px] h-[42px] rounded-[11px] bg-brand-beige flex items-center justify-center flex-shrink-0 text-brand-green">
-                <i className={`ti ${q.icon}`} style={{ fontSize: 22 }} />
+              <div className="w-[58px] h-[58px] rounded-[11px] bg-brand-beige flex items-center justify-center flex-shrink-0 text-brand-green overflow-hidden">
+                {q.image_url ? (
+                  <img src={q.image_url} alt={q.title} className="w-full h-full object-cover" />
+                ) : (
+                  <i className={`ti ${q.icon}`} style={{ fontSize: 24 }} />
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-extrabold text-[#1a1a1a] mb-px leading-tight">{q.title}</div>

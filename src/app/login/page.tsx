@@ -2,14 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { IconUser, IconShieldCheck } from '@tabler/icons-react';
 import { createClient } from '@/lib/supabase-client';
 import { SheepSvg } from '@/components/SheepSvg';
 
 export default function LoginPage() {
   const router = useRouter();
   const supabase = createClient();
-  const [role, setRole] = useState<'user' | 'admin'>('user');
   const [email, setEmail] = useState('marko@splitski.app');
   const [password, setPassword] = useState('password123');
   const [loading, setLoading] = useState(false);
@@ -26,7 +24,7 @@ export default function LoginPage() {
       const { error: e1 } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { name, role } }
+        options: { data: { name } }
       });
       if (e1) { setError(e1.message); setLoading(false); return; }
     } else {
@@ -41,14 +39,6 @@ export default function LoginPage() {
     router.refresh();
   }
 
-  function selectRole(r: 'user' | 'admin') {
-    setRole(r);
-    if (mode === 'signup') {
-      setEmail(r === 'admin' ? 'admin@splitski.app' : 'marko@splitski.app');
-      setName(r === 'admin' ? 'Admin Split' : 'Marko Perić');
-    }
-  }
-
   return (
     <div className="flex-1 bg-gradient-to-b from-brand-green to-brand-green-light flex flex-col items-center justify-center p-7 text-white">
       <div className="w-[90px] h-[90px] rounded-full bg-white flex items-center justify-center mb-3.5">
@@ -61,27 +51,6 @@ export default function LoginPage() {
         onSubmit={handleSubmit}
         className="bg-white rounded-2xl p-[22px] w-full text-[#1a1a1a] shadow-xl"
       >
-        <div className="flex gap-1.5 bg-[#f4f1ea] rounded-xl p-1 mb-[18px]">
-          <button
-            type="button"
-            onClick={() => selectRole('user')}
-            className={`flex-1 py-2 text-xs font-extrabold rounded-lg flex items-center justify-center gap-1 transition-colors ${
-              role === 'user' ? 'bg-brand-green text-white' : 'text-brand-muted'
-            }`}
-          >
-            <IconUser size={14} />User
-          </button>
-          <button
-            type="button"
-            onClick={() => selectRole('admin')}
-            className={`flex-1 py-2 text-xs font-extrabold rounded-lg flex items-center justify-center gap-1 transition-colors ${
-              role === 'admin' ? 'bg-brand-green text-white' : 'text-brand-muted'
-            }`}
-          >
-            <IconShieldCheck size={14} />Admin
-          </button>
-        </div>
-
         {mode === 'signup' && (
           <>
             <div className="text-[11px] font-extrabold text-brand-muted uppercase tracking-wide mb-1.5">

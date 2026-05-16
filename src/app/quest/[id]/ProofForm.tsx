@@ -93,6 +93,11 @@ export function ProofForm({ quest }: { quest: Quest }) {
       </div>
 
       <div className="p-3">
+        {quest.image_url && (
+          <div className="w-full rounded-[11px] overflow-hidden h-36 mb-3">
+            <img src={quest.image_url} alt={quest.title} className="w-full h-full object-cover" />
+          </div>
+        )}
         <input ref={inputRef} type="file" accept="image/*" onChange={handleFile} />
         {!preview ? (
           <div

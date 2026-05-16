@@ -16,6 +16,8 @@ create table profiles (
   name text not null,
   neighborhood text default 'Manuš',
   points int default 0,
+  streak int default 0,
+  last_submission_date date,
   role text default 'user' check (role in ('user', 'admin')),
   created_at timestamptz default now()
 );
@@ -28,6 +30,7 @@ create table quests (
   title text not null,
   description text not null,
   icon text default 'ti-paw',
+  image_url text,
   points int default 50,
   proof_type text default 'photo' check (proof_type in ('photo', 'qr')),
   qr_method text check (qr_method in ('auto', 'event', 'organizer')),
@@ -67,7 +70,7 @@ begin
   values (
     new.id,
     coalesce(new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)),
-    coalesce(new.raw_user_meta_data->>'role', 'user')
+    'user'
   );
   return new;
 end;
@@ -77,6 +80,33 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function handle_new_user();
+
+-- ============================================
+-- STREAK UPDATE ON SUBMISSION
+-- ============================================
+create or replace function update_streak_on_submit()
+returns trigger as $$
+declare
+  v_last date;
+  v_today date := current_date;
+begin
+  select last_submission_date into v_last from profiles where id = new.user_id;
+  if v_last = v_today then
+    -- already submitted today, no change
+    return new;
+  elsif v_last = v_today - 1 then
+    update profiles set streak = streak + 1, last_submission_date = v_today where id = new.user_id;
+  else
+    update profiles set streak = 1, last_submission_date = v_today where id = new.user_id;
+  end if;
+  return new;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists on_request_streak on requests;
+create trigger on_request_streak
+  after insert on requests
+  for each row execute function update_streak_on_submit();
 
 -- ============================================
 -- APPROVE REQUEST (atomic: adds points + updates status)
@@ -156,10 +186,28 @@ create policy "photos_user_upload" on storage.objects for insert
 -- ============================================
 -- SEED DATA
 -- ============================================
-insert into quests (title, description, icon, points, proof_type) values
-  ('Photo a pothole nearby', 'Pin it on the map for the city', 'ti-camera', 50, 'photo'),
-  ('Coffee at a local konoba', 'Skip the chains, support Split', 'ti-coffee', 40, 'photo'),
-  ('Shop at Pazar market', 'Photo your produce or receipt', 'ti-shopping-bag', 45, 'photo'),
-  ('Bačvice beach cleanup', 'Organizer scans your QR at the event', 'ti-wave-saw-tool', 120, 'qr'),
-  ('Help an elderly neighbor', 'Groceries, errands, or just talk', 'ti-heart-handshake', 80, 'photo'),
-  ('Take the Promet bus today', 'Leave the car, reduce traffic', 'ti-bus', 40, 'photo');
+insert into quests (title, description, icon, image_url, points, proof_type) values
+  ('Hike Marjan to the top', 'Climb to Telegrin viewpoint, photo of the city below', 'ti-mountain',
+   'https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=400&q=70', 70, 'photo'),
+  ('Morning coffee at Riva', 'Skip the chains — sit at a Riva kavana with a real macchiato', 'ti-coffee',
+   'https://images.unsplash.com/photo-1517842645767-c639042777db?w=400&q=70', 40, 'photo'),
+  ('Fresh produce at Pazar', 'Buy seasonal fruit or veg at the open-air market, photo your bag', 'ti-shopping-bag',
+   'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=400&q=70', 45, 'photo'),
+  ('Fish at Ribarnica', 'Pick up fresh fish at the city fish market, photo the catch', 'ti-fish',
+   'https://images.unsplash.com/photo-1534177616072-ef7dc120449d?w=400&q=70', 50, 'photo'),
+  ('Konoba lunch in the old town', 'Eat pašticada, peka or black risotto in a real konoba', 'ti-tools-kitchen-2',
+   'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=70', 60, 'photo'),
+  ('Swim at Bačvice', 'Quick swim or picigin game on the sand, photo the bay', 'ti-wave-saw-tool',
+   'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=70', 50, 'photo'),
+  ('Walk Diocletian''s Palace', 'Wander the Peristil and cellars inside the old palace', 'ti-building-castle',
+   'https://images.unsplash.com/photo-1565006447831-77bf523dbd2c?w=400&q=70', 55, 'photo'),
+  ('Report a pothole or broken bench', 'Help the city — photo + pin for komunalno', 'ti-alert-triangle',
+   'https://images.unsplash.com/photo-1597176116047-876a32798fcc?w=400&q=70', 50, 'photo'),
+  ('Ride the Promet bus', 'Leave the car at home, take public transit today', 'ti-bus',
+   'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=400&q=70', 40, 'photo'),
+  ('Help an elderly neighbor', 'Groceries, errands, or just a chat on the balkon', 'ti-heart-handshake',
+   'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&q=70', 80, 'photo'),
+  ('Žnjan beach cleanup', 'Organized cleanup event — organizer scans your QR on arrival', 'ti-trash',
+   'https://images.unsplash.com/photo-1583244532610-2a234e9d6db4?w=400&q=70', 120, 'qr'),
+  ('Cheer Hajduk at Poljud', 'Match day at the stadium, photo from the stands', 'ti-ball-football',
+   'https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=400&q=70', 90, 'photo');

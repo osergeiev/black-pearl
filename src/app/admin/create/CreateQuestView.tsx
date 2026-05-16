@@ -26,6 +26,7 @@ export function CreateQuestView() {
   const supabase = createClient();
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [pts, setPts] = useState(50);
   const [icon, setIcon] = useState(ICONS[0].value);
   const [proofType, setProofType] = useState<'photo' | 'qr'>('photo');
@@ -46,6 +47,7 @@ export function CreateQuestView() {
     setSaving(true);
     const { error } = await supabase.from('quests').insert({
       title, description: desc, icon, points: pts, proof_type: proofType,
+      image_url: imageUrl.trim() || null,
       qr_method: proofType === 'qr' ? qrMethod : null,
       qr_data: proofType === 'qr' ? generatedQr : null,
       active: true
@@ -74,6 +76,15 @@ export function CreateQuestView() {
         <Label>Description</Label>
         <input value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="short description of what to do"
                className="w-full border-[1.5px] border-brand-beige-dark rounded-xl px-3 py-2.5 text-[13px] font-bold bg-white outline-none focus:border-brand-purple" />
+
+        <Label>Image URL (optional)</Label>
+        <input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..."
+               className="w-full border-[1.5px] border-brand-beige-dark rounded-xl px-3 py-2.5 text-[13px] font-bold bg-white outline-none focus:border-brand-purple" />
+        {imageUrl.trim() && (
+          <div className="w-full h-28 rounded-[11px] overflow-hidden mt-2 bg-brand-beige">
+            <img src={imageUrl} alt="preview" className="w-full h-full object-cover" />
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-2.5 mt-1.5">
           <div>

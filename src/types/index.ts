@@ -3,6 +3,8 @@ export type Profile = {
   name: string;
   neighborhood: string | null;
   points: number;
+  streak: number;
+  last_submission_date: string | null;
   role: 'user' | 'admin';
   created_at: string;
 };
@@ -12,6 +14,7 @@ export type Quest = {
   title: string;
   description: string;
   icon: string;
+  image_url: string | null;
   points: number;
   proof_type: 'photo' | 'qr';
   qr_method: 'auto' | 'event' | 'organizer' | null;
